@@ -1,0 +1,8 @@
+#app{
+  display: grid;
+  place-content: center;
+
+  background-color:darkslategray;
+  height: 100vh;
+
+}
