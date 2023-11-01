@@ -1,0 +1,17 @@
+{
+  "name": "localchess",
+  "version": "1.0.0",
+  "description": "CSC 307 project creating a local chess website",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
