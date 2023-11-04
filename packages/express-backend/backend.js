@@ -39,6 +39,24 @@ const PORT_NUMBER = 300;
 
 const PORT = 3000;
 
+
+/* This function creates the appropiate piece type with the appropiate color
+and position depending on the row and column it is given. 
+First, the function checks if the row given is the top most or bottom most
+row (the rows where the initial pieces are the non-pawn pieces). If this is 
+the case, it then checks the piece color depending on whether the row is at the
+top or bottom. If it is at the bottom, then the piece must be white. Else, it 
+must be black. In Columns A and H, the piece created must be a rook. In 
+Columns B and G, the piece created must be a knight. In Columns C and F,
+the piece must be a bishop. In Column D, the piece must be a Queen. In Column
+E, the piece must be a king.
+
+In addition to creating non-pawn pieces, this function also creates pawn pieces.
+It first checks if the rows are equal to the rows where pawns start (Row 2 and
+Row 1). If this is the case, it then determines the pawn color depnding on the row.
+
+This function returns the piece created with its pieceType, pieceColor, and position.
+*/
 function createPieceForInitialPosition(row, col) {
   let pieceType = null;
   let pieceColor = null;
@@ -80,6 +98,19 @@ function createPieceForInitialPosition(row, col) {
   return piece;
 }
 
+/*This function is used to create the initial pieces in their initial positions
+at the start of the game. 
+
+This function first creates a 2D 8x8 array to mimic the chessboard.
+It then loops through all the 64 squares of the chessboard. If the row
+being traversed is Row 1 or Row 8, this function uses createPieceForInitialPosition
+to create non-pawn piece in all the columns. createPieceForInitialPosition returns
+the appropiate piece with the appropiate color and the variable board stores that piece
+in the appropiate location. 
+If the row being traversed is Row 1 or Row 8, this function uses createPieceForInitialPosition
+to create pawn pieces in all the columns. 
+If the rows being traversed are none of the previously mentioned rows, the board populates these
+positions with a null value.*/
 function createInitialBoard() {
   const board = new Array(BOARD_HEIGHT);
 
@@ -102,6 +133,11 @@ function createInitialBoard() {
   return board;
 }
 
+/*This function is used to start a new game.
+The board is set to its initalState.
+The current player selected is white (white moves first in chess).
+The result of the game is in progress (nobody won or lost so far).
+The history is left blank (no moves have been made yet). */
 function initializeNewGame() {
   const initialBoard = createInitialBoard(); 
   
@@ -115,6 +151,10 @@ function initializeNewGame() {
   return game;
 }
 
+/*The function is used to check if the move a player made can be considered
+a valid move. It checks if the movement is within bounds of the chessboard.
+It then checks if the piece selected belongs to the player. Finally, it checks
+if the piece is allowed to move to toSquare based on its piece rules. */
 function isValidMove(game, fromSquare, toSquare) {
   const { board, currentPlayer } = game;
 
@@ -135,6 +175,9 @@ function isValidMove(game, fromSquare, toSquare) {
   return true;
 }
 
+/*This function checks whether the destination to move a piece is within bounds
+of the chessboard. If it is within bounds, the function returns true. Else, it
+returns false. */
 function isValidSquare(square) {
   const { row, col } = square;
   
@@ -145,7 +188,21 @@ function isValidSquare(square) {
   }
 }
 
+/*This function checks whether a chess piece can move to its final destination
+based on the particular piece's rules. First, the function checks that the player
+is not moving a piece to its own location and it checks that the piece being moved 
+belongs to the player. These rules apply regardless of chess piece that is selected
+to move. The switch case then applies different rules dpeending on the piece selected.
+Currently, only the functionality of pawns has been implemented for the minimum viable
+product. If the pawn is white, the code implements functionality that allows a pawn to
+(1) move forward to the next row (as long as there are no pieces in the next row)
+(2) move two rows forward if the pawn is at starting position and there are no
+other pieces in the destination.
+(3) capture a piece diagonally (checks if pawn moves diagonally and moves to a
+position occupied by an enemy chess piece).
 
+Without loss of generality, similar functionality is implemented for black pawns.
+*/
 function isValidPieceMove(game, fromSquare, toSquare, piece) {
   const { board } = game;
   const { type, color } = piece;
@@ -194,6 +251,12 @@ function isValidPieceMove(game, fromSquare, toSquare, piece) {
   return false; 
 }
 
+/*This function finds the player's king by traversing through the whole board. 
+If the player's king can be found, the king is still not captured. 
+If the player's king can not be found, then the king has been captured. 
+
+This variant of chess does not have checks or checkmate. A player wins instead
+by capturing the enemy king.*/
 
 function findKing(board, player) {
   for (let row = ROW_1; row < BOARD_HEIGHT; row++) {
@@ -206,6 +269,10 @@ function findKing(board, player) {
   }
   return false;
 }
+
+/* This function is used to update the current game state and board. 
+It also switches been both players' turns as well as pushing the most
+recent move to history. */
 
 function updateGameState(game, fromSquare, toSquare) {
   const { board, currentPlayer } = game;
@@ -225,6 +292,9 @@ function updateGameState(game, fromSquare, toSquare) {
   });
 }
 
+/*This function checks if the game is finished or not.
+If the current player's king can be found, the game is still in progress.
+Else, the game is finished (the player's king has been captured.) */
 function checkGameResult(game) {
   const { board, currentPlayer } = game;
   if(findKing(game, currentPlayer)){
