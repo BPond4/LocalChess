@@ -195,8 +195,8 @@ belongs to the player. These rules apply regardless of chess piece that is selec
 to move. The switch case then applies different rules dpeending on the piece selected.
 Currently, only the functionality of pawns has been implemented for the minimum viable
 product. If the pawn is white, the code implements functionality that allows a pawn to
-(1) move forward to the next row (as long as there are no pieces in the next row)
-(2) move two rows forward if the pawn is at starting position and there are no
+(1) move up one spot (as long as there are no pieces in the next spot)
+(2) move two spots forward if the pawn is at starting position and there are no
 other pieces in the destination.
 (3) capture a piece diagonally (checks if pawn moves diagonally and moves to a
 position occupied by an enemy chess piece).
