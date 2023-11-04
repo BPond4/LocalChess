@@ -3,44 +3,59 @@ const bodyParser = require('body-parser');
 const app = express();
 const PORT = 3000;
 
+const ROW_1 = 0;
+const ROW_2 = 1;
+const ROW_3 = 2;
+const ROW_4 = 3;
+const ROW_5 = 4;
+const ROW_6 = 5;
+const ROW_7 = 6;
+const ROW_8 = 7;
+
+const COL_A = 0;
+const COL_B = 1;
+const COL_C = 2;
+const COL_D = 3;
+const COL_E = 4;
+const COL_F = 5;
+const COL_G = 6;
+const COL_H = 7;
+
+const BOARD_HEIGHT = 8;
+const BOARD_WIDTH = 8;
 
 function createPieceForInitialPosition(row, col) {
-  // Initialize variables to store piece type and color.
   let pieceType = null;
   let pieceColor = null;
 
-  // Determine the piece type and color based on the row (rank).
-  if (row === 0 || row === 7) {
-    // Pieces for the first (top) and eighth (bottom) ranks.
-    pieceColor = (row === 0) ? 'white' : 'black';
+  if (row === ROW_1 || row === ROW_8) {
+    pieceColor = (row === ROW_1) ? 'white' : 'black';
 
     switch (col) {
-      case 0:
-      case 7:
+      case COL_A:
+      case COL_H:
         pieceType = 'rook';
         break;
-      case 1:
-      case 6:
+      case COL_B:
+      case COL_G:
         pieceType = 'knight';
         break;
-      case 2:
-      case 5:
+      case COL_C:
+      case COL_F:
         pieceType = 'bishop';
         break;
-      case 3:
+      case COL_D:
         pieceType = 'queen';
         break;
-      case 4:
+      case COL_E:
         pieceType = 'king';
         break;
     }
-  } else if (row === 1 || row === 6) {
-    // Pawns for the second (white) and seventh (black) ranks.
+  } else if (row === ROW_2 || row === ROW_7) {
     pieceType = 'pawn';
-    pieceColor = (row === 1) ? 'white' : 'black';
+    pieceColor = (row === ROW_1) ? 'white' : 'black';
   }
 
-  // Create and return the piece object.
   const piece = {
     type: pieceType,
     color: pieceColor,
@@ -51,24 +66,19 @@ function createPieceForInitialPosition(row, col) {
 }
 
 function createInitialBoard() {
-  // Create an 8x8 2D array to represent the chessboard.
-  const board = new Array(8);
+  const board = new Array(BOARD_HEIGHT);
 
-  for (let row = 0; row < 8; row++) {
-    board[row] = new Array(8);
+  for (let row = ROW_1; row < BOARD_HEIGHT; row++) {
+    board[row] = new Array(BOARD_WIDTH);
   }
 
-  // Place the initial chess pieces on the board.
-  for (let row = 0; row < 8; row++) {
-    for (let col = 0; col < 8; col++) {
-      if (row === 0 || row === 7) {
-        // Place rooks, knights, bishops, queens, and kings for both white and black players in the first and last ranks.
-        board[row][col] = createPieceForInitialPosition(row, col);
-      } else if (row === 1 || row === 6) {
-        // Place pawns for both white and black players in the second and seventh ranks.
+  for (let row = ROW_1; row < BOARD_HEIGHT; row++) {
+    for (let col = COL_A; col < BOARD_WIDTH; col++) {
+      if (row === ROW_1 || row === ROW_8) {
+\        board[row][col] = createPieceForInitialPosition(row, col);
+      } else if (row === ROW_2 || row === ROW_7) {
         board[row][col] = createPieceForInitialPosition(row, col);
       } else {
-        // Empty squares in all other positions.
         board[row][col] = null;
       }
     }
@@ -78,14 +88,13 @@ function createInitialBoard() {
 }
 
 function initializeNewGame() {
-  // Define the initial state of the chess game
-  const initialBoard = createInitialBoard(); // Implement this function to set up the starting positions of chess pieces.
+  const initialBoard = createInitialBoard(); 
   
   const game = {
-    board: initialBoard, // The 2D array representing the chessboard.
-    currentPlayer: 'white', // The player to make the first move.
-    result: 'in_progress', // The initial game result (e.g., 'in_progress').
-    history: [], // An array to store the history of moves for potential game replay or undo.
+    board: initialBoard, 
+    currentPlayer: 'white', 
+    result: 'in_progress', 
+    history: [], 
   };
 
   return game;
