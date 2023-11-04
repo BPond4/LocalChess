@@ -24,36 +24,50 @@ const COL_H = 7;
 const BOARD_HEIGHT = 8;
 const BOARD_WIDTH = 8;
 
+const WHITE = 'white';
+const BLACK = 'black';
+const ROOK = 'rook';
+const KNIGHT = 'knight';
+const BISHOP = 'bishop';
+const QUEEN = 'queen';
+const KING = 'king';
+const PAWN = 'pawn';
+const IN_PROGRESS = 'in_progress';
+const FINISHED = 'finished';
+
+const BAD_REQUEST = 400;
+
+
 function createPieceForInitialPosition(row, col) {
   let pieceType = null;
   let pieceColor = null;
 
   if (row === ROW_1 || row === ROW_8) {
-    pieceColor = (row === ROW_1) ? 'white' : 'black';
+    pieceColor = (row === ROW_1) ? WHITE : BLACK;
 
     switch (col) {
       case COL_A:
       case COL_H:
-        pieceType = 'rook';
+        pieceType = ROOK;
         break;
       case COL_B:
       case COL_G:
-        pieceType = 'knight';
+        pieceType = KNIGHT;
         break;
       case COL_C:
       case COL_F:
-        pieceType = 'bishop';
+        pieceType = BISHOP;
         break;
       case COL_D:
-        pieceType = 'queen';
+        pieceType = QUEEN;
         break;
       case COL_E:
-        pieceType = 'king';
+        pieceType = KING;
         break;
     }
   } else if (row === ROW_2 || row === ROW_7) {
-    pieceType = 'pawn';
-    pieceColor = (row === ROW_1) ? 'white' : 'black';
+    pieceType = PAWN;
+    pieceColor = (row === ROW_1) ? WHITE : BLACK;
   }
 
   const piece = {
@@ -92,8 +106,8 @@ function initializeNewGame() {
   
   const game = {
     board: initialBoard, 
-    currentPlayer: 'white', 
-    result: 'in_progress', 
+    currentPlayer: WHITE, 
+    result: IN_PROGRESS, 
     history: [], 
   };
 
@@ -103,34 +117,27 @@ function initializeNewGame() {
 function isValidMove(game, fromSquare, toSquare) {
   const { board, currentPlayer } = game;
 
-  // Check if 'fromSquare' and 'toSquare' are valid positions on the board.
   if (!isValidSquare(fromSquare) || !isValidSquare(toSquare)) {
     return false;
   }
 
-  // Get the piece at 'fromSquare'.
   const fromPiece = board[fromSquare.row][fromSquare.col];
 
-  // Ensure there is a piece at 'fromSquare' and it belongs to the current player.
   if (!fromPiece || fromPiece.color !== currentPlayer) {
     return false;
   }
 
-  // Check if the move is valid for the specific piece type.
   if (!isValidPieceMove(game, fromSquare, toSquare, fromPiece)) {
     return false;
   }
 
-  // If all checks pass, the move is valid.
   return true;
 }
 
 function isValidSquare(square) {
-  // Check if 'square' is within the bounds of an 8x8 chessboard.
   const { row, col } = square;
   
-  // Check if row and column are within the range [0, 7].
-  if (row >= 0 && row < 8 && col >= 0 && col < 8) {
+  if (row >= ROW_1 && row < BOARD_HEIGHT && col >= COL_A && col < BOARD_WIDTH) {
     return true;
   } else {
     return false;
@@ -144,57 +151,54 @@ function isValidPieceMove(game, fromSquare, toSquare, piece) {
   const { row: fromRow, col: fromCol } = fromSquare;
   const { row: toRow, col: toCol } = toSquare;
 
-  // Check if the 'fromSquare' and 'toSquare' are the same.
   if (fromRow === toRow && fromCol === toCol) {
-    return false; // A piece cannot move to its own position.
+    return false; 
   }
 
-  // Check if 'toSquare' is occupied by a piece of the same color.
   if (board[toRow][toCol] && board[toRow][toCol].color === color) {
-    return false; // You cannot capture your own piece.
+    return false; 
   }
 
-  // Implement piece-specific move validation logic.
   switch (type) {
-    case 'pawn':
-      // Validate pawn moves (basic pawn movement logic).
-      if (color === 'white') {
-        // White pawn moves forward (from row to row - 1).
-        if (fromRow - 1 === toRow && fromCol === toCol) {
+    case PAWN:
+      if (color === WHITE) {
+      	let nextRow = frontRow+1;
+        if (toRow == nextRow && fromCol === toCol && board[toRow][toCol]==null) {
           return true;
         }
-
-        // White pawn's first move allows two squares forward (from row to row - 2).
-        if (fromRow === 6 && fromRow - 2 === toRow && fromCol === toCol) {
+        if (fromRow === ROW_2 && toRow == ROW_4 && fromCol === toCol && board[toRow][toCol]==null) {
           return true;
         }
-
-        // White pawn captures diagonally (one row up and one column left or right).
-        if (fromRow - 1 === toRow && Math.abs(fromCol - toCol) === 1) {
+        if (toRow == nextRow && Math.abs(fromCol - toCol) === 1 && board[toRow][toCol] && board[toRow][toCol].color === BLACK) {
           return true;
         }
-      } else if (color === 'black') {
-        // Similar logic for black pawns (moves down the board).
-        // Implement black pawn move validation here.
+      } else if (color === BLACK) {
+	        let nextRow = frontRow-1;
+	        if (toRow == nextRow && fromCol === toCol && board[toRow][toCol]==null) {
+	          return true;
+	        }
+	        if (fromRow === ROW_7 && toRow == ROW_5 && fromCol === toCol && board[toRow][toCol] == null) {
+	          return true;
+	        }
+	        if (toRow == nextRow && Math.abs(fromCol - toCol) === 1 && board[toRow][toCol] && board[toRow][toCol].color === WHITE) {
+	          return true;
+	        }
       }
       break;
 
-    // Implement move validation rules for other piece types (rooks, knights, bishops, queens, kings).
-
     default:
-      return false; // Invalid piece type.
+      return false; 
   }
 
-  return false; // If no move conditions were met, the move is invalid.
+  return false; 
 }
 
 
 function findKing(board, player) {
-  // Iterate through the board to find if the player's king is still alive.
-  for (let row = 0; row < 8; row++) {
-    for (let col = 0; col < 8; col++) {
+  for (let row = ROW_1; row < BOARD_HEIGHT; row++) {
+    for (let col = COL_A; col < BOARD_WIDTH; col++) {
       const piece = board[row][col];
-      if (piece && piece.type === 'king' && piece.color === player) {
+      if (piece && piece.type === KING && piece.color === player) {
         return true;
       }
     }
@@ -207,15 +211,12 @@ function updateGameState(game, fromSquare, toSquare) {
   const { row: fromRow, col: fromCol } = fromSquare;
   const { row: toRow, col: toCol } = toSquare;
 
-  // Move the piece from 'fromSquare' to 'toSquare'.
   const pieceToMove = board[fromRow][fromCol];
   board[toRow][toCol] = pieceToMove;
   board[fromRow][fromCol] = null;
 
-  // Update the current player (switch turns).
-  game.currentPlayer = (currentPlayer === 'white') ? 'black' : 'white';
+  game.currentPlayer = (currentPlayer === WHITE) ? BLACK : WHITE;
 
-  // Optionally, record the move in the game's history for future reference.
   game.history.push({
     from: fromSquare,
     to: toSquare,
@@ -226,38 +227,29 @@ function updateGameState(game, fromSquare, toSquare) {
 function checkGameResult(game) {
   const { board, currentPlayer } = game;
   if(findKing(game, currentPlayer)){
-  	return 'checkmate';
+  	return FINISHED;
   }
   else{
-  	return 'in_progress';
+  	return IN_PROGRESS;
   }
 }
 
-// Define the game state
-let game = initializeNewGame(); // Implement this function to create a new chess game state
-// Middleware for handling JSON requests
+let game = initializeNewGame(); 
+
 app.use(bodyParser.json());
 
-// API endpoints for chess game
 app.post('/move', (req, res) => {
   const { fromSquare, toSquare } = req.body;
 
   if (isValidMove(game, fromSquare, toSquare)) {
-    // Update the game state with the valid move
     updateGameState(game, fromSquare, toSquare);
-
-    // Check for check, checkmate, and stalemate conditions
     const gameResult = checkGameResult(game);
-
-    // Return the updated game state and result
     res.json({ game: game, result: gameResult });
   } else {
-    // Handle invalid move
-    res.status(400).json({ error: 'Invalid move' });
+    res.status(BAD_REQUEST).json({ error: 'Invalid move' });
   }
 });
 
-// Start the server
 app.listen(PORT, () => {
   console.log(`Chess game server is running on port ${PORT}`);
 });
