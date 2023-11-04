@@ -39,13 +39,22 @@ const pieces = [
 	new Pawn("black", new Position(7,1))
 ]
 
+const currentPlayer = "white";
+
+const moveHistory = [];
+
 
 app.use(cors());
 
 app.use(express.json());
 
-app.get('/', (req, res) => {
+app.post("/move", (req, res)) => {
+	const { from, to } = req.body;
+	
+}
 
+app.get('/', (req, res) => {
+	res.send("Hello World");
 });
 
 
