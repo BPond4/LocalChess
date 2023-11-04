@@ -1,7 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
-const PORT = 3000;
 
 const ROW_1 = 0;
 const ROW_2 = 1;
@@ -36,7 +35,9 @@ const IN_PROGRESS = 'in_progress';
 const FINISHED = 'finished';
 
 const BAD_REQUEST = 400;
+const PORT_NUMBER = 300;
 
+const PORT = 3000;
 
 function createPieceForInitialPosition(row, col) {
   let pieceType = null;
