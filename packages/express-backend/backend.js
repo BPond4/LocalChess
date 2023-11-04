@@ -220,7 +220,7 @@ function isValidPieceMove(game, fromSquare, toSquare, piece) {
   switch (type) {
     case PAWN:
       if (color === WHITE) {
-      	let nextRow = frontRow+1;
+      	let nextRow = fromRow+1;
         if (toRow == nextRow && fromCol === toCol && board[toRow][toCol]==null) {
           return true;
         }
@@ -231,7 +231,7 @@ function isValidPieceMove(game, fromSquare, toSquare, piece) {
           return true;
         }
       } else if (color === BLACK) {
-	        let nextRow = frontRow-1;
+	        let nextRow = fromRow-1;
 	        if (toRow == nextRow && fromCol === toCol && board[toRow][toCol]==null) {
 	          return true;
 	        }
