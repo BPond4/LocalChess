@@ -112,11 +112,6 @@ function isValidMove(game, fromSquare, toSquare) {
     return false;
   }
 
-  // Validate that the move doesn't put the current player in check.
-  if (movePutsPlayerInCheck(game, fromSquare, toSquare)) {
-    return false;
-  }
-
   // If all checks pass, the move is valid.
   return true;
 }
@@ -185,58 +180,47 @@ function isValidPieceMove(game, fromSquare, toSquare, piece) {
 }
 
 
-function movePutsPlayerInCheck(game, fromSquare, toSquare) {
-  // Simulate the move temporarily.
-  const { board, currentPlayer } = game;
-  const { row: fromRow, col: fromCol } = fromSquare;
-  const { row: toRow, col: toCol } = toSquare;
-
-  const originalPieceAtToSquare = board[toRow][toCol];
-  board[toRow][toCol] = board[fromRow][fromCol];
-  board[fromRow][fromCol] = null;
-
-  // Check if the current player is now in check.
-  const inCheck = isPlayerInCheck(game, currentPlayer);
-
-  // Revert the move to its original state.
-  board[fromRow][fromCol] = board[toRow][toCol];
-  board[toRow][toCol] = originalPieceAtToSquare;
-
-  return inCheck;
-}
-
-function isPlayerInCheck(game, player) {
-  const { board } = game;
-
-  // Find the king's position for the specified player.
-  const kingPosition = findKingPosition(board, player);
-
-  // Iterate through the entire board to find opponent pieces.
-  for (let row = 0; row < 8; row++) {
-    for (let col = 0; col < 8; col++) {
-      const piece = board[row][col];
-
-      if (piece && piece.color !== player) {
-        // Check if the opponent's piece can attack the king's position.
-        if (isValidPieceMove(game, { row, col }, kingPosition, piece)) {
-          return true; // Player is in check.
-        }
-      }
-    }
-  }
-
-  return false; // Player is not in check.
-}
-
-function findKingPosition(board, player) {
-  // Iterate through the board to find the position of the player's king.
+function findKing(board, player) {
+  // Iterate through the board to find if the player's king is still alive.
   for (let row = 0; row < 8; row++) {
     for (let col = 0; col < 8; col++) {
       const piece = board[row][col];
       if (piece && piece.type === 'king' && piece.color === player) {
-        return { row, col };
+        return true;
       }
     }
+  }
+  return false;
+}
+
+function updateGameState(game, fromSquare, toSquare) {
+  const { board, currentPlayer } = game;
+  const { row: fromRow, col: fromCol } = fromSquare;
+  const { row: toRow, col: toCol } = toSquare;
+
+  // Move the piece from 'fromSquare' to 'toSquare'.
+  const pieceToMove = board[fromRow][fromCol];
+  board[toRow][toCol] = pieceToMove;
+  board[fromRow][fromCol] = null;
+
+  // Update the current player (switch turns).
+  game.currentPlayer = (currentPlayer === 'white') ? 'black' : 'white';
+
+  // Optionally, record the move in the game's history for future reference.
+  game.history.push({
+    from: fromSquare,
+    to: toSquare,
+    piece: pieceToMove,
+  });
+}
+
+function checkGameResult(game) {
+  const { board, currentPlayer } = game;
+  if(findKing(game, currentPlayer)){
+  	return 'checkmate';
+  }
+  else{
+  	return 'in_progress';
   }
 }
 
@@ -244,6 +228,25 @@ function findKingPosition(board, player) {
 let game = initializeNewGame(); // Implement this function to create a new chess game state
 // Middleware for handling JSON requests
 app.use(bodyParser.json());
+
+// API endpoints for chess game
+app.post('/move', (req, res) => {
+  const { fromSquare, toSquare } = req.body;
+
+  if (isValidMove(game, fromSquare, toSquare)) {
+    // Update the game state with the valid move
+    updateGameState(game, fromSquare, toSquare);
+
+    // Check for check, checkmate, and stalemate conditions
+    const gameResult = checkGameResult(game);
+
+    // Return the updated game state and result
+    res.json({ game: game, result: gameResult });
+  } else {
+    // Handle invalid move
+    res.status(400).json({ error: 'Invalid move' });
+  }
+});
 
 // Start the server
 app.listen(PORT, () => {
