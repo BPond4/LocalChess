@@ -2,7 +2,7 @@ import backend from './backend.js';
 
 // Tests run fine, ask about why the testing says that it is waiting on something, could be port thing idk
 
-describe('Chess Game', () => {
+describe('Chess Game Movement', () => {
 
 	// 2 pawn moving tests are failing here, both have to do with isValidMove logic, needs fixing
 	let game;
@@ -15,12 +15,12 @@ describe('Chess Game', () => {
 		const board = backend.createInitialBoard();
 		expect(board[0][0].type).toBe('rook');
 		expect(board[0][0].color).toBe('white');
-		// Add tests to check all pieces are in the right square
+		// Add tests to check all pieces are in the right square possibly
 	  });
 
 	  test('Valid move for pawn from A2 to A3', () => {
-		const fromSquare = { row: 1, col: 1 };
-		const toSquare = { row: 2, col: 1 };
+		const fromSquare = { row: 1, col: 0 };
+		const toSquare = { row: 2, col: 0 };
 		const isValid = backend.isValidMove(game, fromSquare, toSquare);
 		expect(isValid).toBe(true);
 	  });
@@ -51,7 +51,7 @@ describe('Chess Game', () => {
 	
 });
 
-describe('checkGameResult', () => {
+describe('Check Game Result', () => {
 
 	// Check game status tests should be good but code needs to be fixed in backend.js, some logic is off
 	test('Game is finished - White king captured', () => {
