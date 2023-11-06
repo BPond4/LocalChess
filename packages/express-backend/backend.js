@@ -1,5 +1,5 @@
-const express = require('express');
-const bodyParser = require('body-parser');
+import express from 'express';
+import bodyParser from 'body-parser';
 const app = express();
 
 const ROW_1 = 0;
@@ -121,7 +121,7 @@ function createInitialBoard() {
   for (let row = ROW_1; row < BOARD_HEIGHT; row++) {
     for (let col = COL_A; col < BOARD_WIDTH; col++) {
       if (row === ROW_1 || row === ROW_8) {
-\        board[row][col] = createPieceForInitialPosition(row, col);
+        board[row][col] = createPieceForInitialPosition(row, col);
       } else if (row === ROW_2 || row === ROW_7) {
         board[row][col] = createPieceForInitialPosition(row, col);
       } else {
@@ -324,3 +324,15 @@ app.post('/move', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Chess game server is running on port ${PORT}`);
 });
+
+export default {
+  createPieceForInitialPosition,
+  createInitialBoard,
+  initializeNewGame,
+  isValidMove,
+  isValidSquare,
+  isValidPieceMove,
+  findKing,
+  updateGameState,
+  checkGameResult,
+};
