@@ -56,7 +56,7 @@ describe('Check Game Result', () => {
 	// Check game status tests should be good but code needs to be fixed in backend.js, some logic is off
 	test('Game is finished - White king captured', () => {
 	  const game = backend.initializeNewGame();
-	  game.board[0][4] = { type: 'king', color: 'black', position: { row: 0, col: 4 } };
+	  game.board[0][3] = { type: 'king', color: 'black', position: { row: 0, col: 4 } };
 	  game.currentPlayer = 'white';
 	  const result = backend.checkGameResult(game);
 	  expect(result).toBe('finished');

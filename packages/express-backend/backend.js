@@ -37,7 +37,7 @@ const FINISHED = 'finished';
 const BAD_REQUEST = 400;
 const PORT_NUMBER = 300;
 
-const PORT = 3000;
+const PORT = 8000;
 
 
 /* This function creates the appropiate piece type with the appropiate color
@@ -86,7 +86,7 @@ function createPieceForInitialPosition(row, col) {
     }
   } else if (row === ROW_2 || row === ROW_7) {
     pieceType = PAWN;
-    pieceColor = (row === ROW_1) ? WHITE : BLACK;
+    pieceColor = (row === ROW_2) ? WHITE : BLACK;
   }
 
   const piece = {
@@ -164,7 +164,11 @@ function isValidMove(game, fromSquare, toSquare) {
 
   const fromPiece = board[fromSquare.row][fromSquare.col];
 
-  if (!fromPiece || fromPiece.color !== currentPlayer) {
+  if(!fromPiece){
+    return false;
+  }
+
+  if(fromPiece.color!==currentPlayer){
     return false;
   }
 
@@ -261,14 +265,17 @@ by capturing the enemy king.*/
 function findKing(board, player) {
   for (let row = ROW_1; row < BOARD_HEIGHT; row++) {
     for (let col = COL_A; col < BOARD_WIDTH; col++) {
-      const piece = board[row][col];
-      if (piece && piece.type === KING && piece.color === player) {
-        return true;
+      if (board[row] && board[row][col] !== NULL) {
+        const piece = board[row][col];
+        if (piece && piece.type === KING && piece.color === player) {
+          return true;
+        }
       }
     }
   }
   return false;
 }
+
 
 /* This function is used to update the current game state and board. 
 It also switches been both players' turns as well as pushing the most
@@ -321,8 +328,8 @@ app.post('/move', (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Chess game server is running on port ${PORT}`);
+app.get('/', (req, res) => {
+  res.send("Hello World");
 });
 
 export default {
