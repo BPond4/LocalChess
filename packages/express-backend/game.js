@@ -5,13 +5,13 @@ const GameSchema = new mongoose.Schema(
     player1: {
       type: String,
       required: true,
-      trim: true,
+      trim: true
     },
     player2: {
       type: String,
       required: true,
       trim: true
-    },
+    }
   },
   { collection: "game_list" }
 );
