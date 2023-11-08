@@ -265,7 +265,7 @@ by capturing the enemy king.*/
 function findKing(board, player) {
   for (let row = ROW_1; row < BOARD_HEIGHT; row++) {
     for (let col = COL_A; col < BOARD_WIDTH; col++) {
-      if (board[row] && board[row][col] !== NULL) {
+      if (board[row] && board[row][col] !== null) {
         const piece = board[row][col];
         if (piece && piece.type === KING && piece.color === player) {
           return true;
@@ -304,11 +304,11 @@ If the current player's king can be found, the game is still in progress.
 Else, the game is finished (the player's king has been captured.) */
 function checkGameResult(game) {
   const { board, currentPlayer } = game;
-  if(findKing(game, currentPlayer)){
-  	return FINISHED;
+  if(findKing(board, currentPlayer)){
+  	return IN_PROGRESS;
   }
   else{
-  	return IN_PROGRESS;
+  	return FINISHED;
   }
 }
 
