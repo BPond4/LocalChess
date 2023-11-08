@@ -39,6 +39,16 @@ describe('Chess Game Movement', () => {
 		expect(isValid).toBe(true);
 	  });
 
+	  test('Valid move for pawn from A4 to A6 (second move)', () => {
+		const fromSquare = { row: 1, col: 0 };
+		const toSquare = { row: 3, col: 0 };
+		backend.updateGameState(game, fromSquare, toSquare)
+		const fromSquare2 = { row: 3, col: 0 }
+		const tosquare2 = { row: 6, col: 0 }
+		const isValid2 = backend.isValidMove(game, fromSquare2, tosquare2);
+		expect(isValid2).toBe(false);
+	  });
+
 	  test('Valid move for pawn capturing a piece diagonally', () => {
 		const game = backend.initializeNewGame();
 		game.board[1][0] = { type: 'pawn', color: 'white', position: { row: 1, col: 0 } };
