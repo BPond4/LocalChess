@@ -4,7 +4,14 @@ import './board.css';
 const rows = ["1", "2", "3", "4", "5", "6", "7", "8"];
 const columns = ["a", "b", "c", "d", "e", "f", "g", "h"];
 
+
+
 export default function Board() {
+
+    function flipBoard(grid){
+        return grid.reverse();
+    }
+
     let grid = [];
 
     for(let i = rows.length-1; i>=0; i--){
@@ -15,7 +22,7 @@ export default function Board() {
                     if(combination%2 === 0){
                     
                         grid.push(
-                            <div className="square light-square">
+                            <div className="square dark-square">
                                 <div className="left-center">
                                     {rows[i]}
                                 </div>
@@ -27,7 +34,7 @@ export default function Board() {
                     }
                     else{
                         grid.push(
-                            <div className="square dark-square">
+                            <div className="square light-square">
                                 <div className="left-center">
                                     {rows[i]}
                                 </div>
@@ -42,7 +49,7 @@ export default function Board() {
                     if(combination%2 === 0){
                     
                         grid.push(
-                            <div className="square light-square">
+                            <div className="square dark-square">
                                 <div className="bottom-center">
                                     {columns[j]}
                                 </div>
@@ -51,7 +58,7 @@ export default function Board() {
                     }
                     else{
                         grid.push(
-                            <div className="square dark-square">
+                            <div className="square light-square">
                                 <div className="bottom-center">
                                     {columns[j]}
                                 </div>
@@ -64,7 +71,7 @@ export default function Board() {
                 if(combination%2 === 0){
                     
                     grid.push(
-                        <div className="square light-square">
+                        <div className="square dark-square">
                             <div className="left-center">
                                 {rows[i]}
                             </div>
@@ -73,7 +80,7 @@ export default function Board() {
                 }
                 else{
                     grid.push(
-                        <div className="square dark-square">
+                        <div className="square light-square">
                             <div className="left-center">
                                 {rows[i]}
                             </div>
@@ -84,18 +91,20 @@ export default function Board() {
             else{
                 if(combination%2 === 0){
                     grid.push(
-                        <div className="square light-square"></div>
+                        <div className="square dark-square"></div>
                     )
                 }
                 else{
                     grid.push(
-                        <div className="square dark-square"></div>
+                        <div className="square light-square"></div>
                     )
                 }
             }
             
         }
     }
+
+    //flipBoard(grid);
 
 
     return <div id = "board-class">{grid}</div>
