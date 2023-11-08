@@ -1,5 +1,5 @@
-import React from 'react';
-import './board.css';
+import React from "react";
+import "./board.css";
 
 const rows = ["1", "2", "3", "4", "5", "6", "7", "8"];
 const columns = ["a", "b", "c", "d", "e", "f", "g", "h"];
