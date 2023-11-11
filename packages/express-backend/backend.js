@@ -233,77 +233,77 @@ function isBlockedDiagonal(fromRow, fromCol, toRow, toCol, board){
 }
 
 /*
-The columnMovement function is designed to evaluate and determine the feasibility of horizontal movement between 
-two columns on a chessboard. 
+The isBlockedHorizontal function is designed to evaluate and determine the feasibility of horizontal movement 
+between two columns on a chessboard. 
 It takes into account the starting row and column (fromRow and fromCol) as well as the target row and column 
 (toRow and toCol) as input parameters. 
 The function begins by comparing the starting and target columns to determine the direction of the movement. 
 If the target column is greater than the starting column, the function iterates through the squares between these 
 columns, checking for any obstructing pieces. 
-In case it encounters an obstruction during the iteration, it returns false, indicating that the horizontal path 
+In case it encounters an obstruction during the iteration, it returns true, indicating that the horizontal path 
 is obstructed. 
 Conversely, if the target column is less than the starting column, the function iterates in the opposite direction 
 to check for obstructions. 
-If no obstructions are found during the iteration, the function returns true, 
+If no obstructions are found during the iteration, the function returns false, 
 indicating that the horizontal movement is valid and unobstructed. 
 This function is crucial for implementing movement rules for pieces like the rook and queen in a chess game, 
 as they can move horizontally along columns.
 */
 
-function columnMovement(fromRow, fromCol, toRow, toCol){
+function isBlockedHorizontal(fromRow, fromCol, toRow, toCol){
   if(fromCol<toCol){
     for (let i = fromCol+ONE_COL_AFTER; i<toCol; i++){
       if(board[fromRow][i]!=null){
-        return false;
+        return true;
       }
     }
-    return true;
+    return false;
   }
   if(fromCol>toCol){
     for (let i = toCol; i<fromCol+ONE_COL_BEFORE; i++){
       if(board[fromRow][col]!=null){
-        return false;
+        return true;
       }
     }
-    return true;
+    return false;
   }
 }
 
 
 /*
-The rowMovement function is designed to assess the viability of vertical movement, specifically from one row 
+The isBlockedVertical function is designed to assess the viability of vertical movement, specifically from one row 
 to another on a chessboard. 
 This function takes as parameters the starting row and column (fromRow and fromCol) and the target row and 
 column (toRow and toCol). 
 The function begins by comparing the starting row and the target row to determine the direction of movement. 
 If the target row is greater than the starting row, the function iterates through the squares between the 
 starting and target rows, checking for any obstructing pieces along the same column. 
-Should an obstruction be found during the iteration, the function returns false, 
+Should an obstruction be found during the iteration, the function returns true, 
 indicating that the vertical path is blocked. 
 Conversely, if the target row is less than the starting row, the function iterates in the 
 opposite direction to examine for obstructions. 
-If no obstructions are encountered during the iteration, the function returns true, 
+If no obstructions are encountered during the iteration, the function returns false, 
 signifying that the vertical movement is permissible and unobstructed. 
 This function is invaluable for implementing movement rules for chess pieces like the rook and queen, 
 as they are capable of moving vertically along rows on the chessboard.
 */
 
-function rowMovement(fromRow, fromCol, toRow, toCol){
+function isBlockedVertical(fromRow, fromCol, toRow, toCol){
   if(fromRow<toRow){
     for(let i = fromRow+ONE_ROW_AFTER; i<toRow; i++){
       if(board[i][fromCol]!=null){
-        return false;
+        return true;
       }
     }
-    return true;
+    return false;
   }
   if(fromRow>toRow){
     for(let i = toRow; i<fromRow+ONE_COL_BEFORE; i++){
       if(board[i][fromCol]!=null){
-        return false;
+        return true;
       }
     }
-    return true;
+    return false;
   }
 }
 
@@ -321,7 +321,7 @@ For pawns, it checks for valid pawn moves, considering factors like direction, c
 moves. 
 Rooks, knights, bishops, queens, and kings each have their unique movement rules, 
 and the function correctly applies these rules to determine the legitimacy of their moves. 
-It also employs helper functions like rowMovement, columnMovement, and isBlockedDiagonal to check for 
+It also employs helper functions like isBlockedVertical, isBlockedHorizontal, and isBlockedDiagonal to check for 
 obstructions in the path of movement, ensuring that the move aligns with the rules of chess. 
 The function returns true if the move is valid and allowed, and false if the move is invalid or obstructed. 
 This comprehensive function plays a crucial role in enforcing the rules of LocalChess 
@@ -372,11 +372,11 @@ function isValidPieceMove(game, fromSquare, toSquare, piece) {
 
     case ROOK:
       if(fromRow===toRow){
-        return columnMovement(fromRow, fromCol, toRow, toCol);
+        return !isBlockedHorizontal(fromRow, fromCol, toRow, toCol);
       }
 
       else if(fromCol==toCol){
-        return rowMovement(fromRow, fromCol, toRow, toCol);
+        return !isBlockedVertical(fromRow, fromCol, toRow, toCol);
       }
 
       return false;
@@ -411,11 +411,11 @@ function isValidPieceMove(game, fromSquare, toSquare, piece) {
 
     case QUEEN:
       if(fromRow===toRow){
-        return columnMovement(fromRow, fromCol, toRow, toCol);
+        return !isBlockedHorizontal(fromRow, fromCol, toRow, toCol);
       }
 
       if(fromCol==toCol){
-        return rowMovement(fromRow, fromCol, toRow, toCol);
+        return !isBlockedVertical(fromRow, fromCol, toRow, toCol);
       }
 
       let queenRowDiff = Math.abs(fromRow-toRow);
