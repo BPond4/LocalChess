@@ -34,6 +34,20 @@ const PAWN = 'pawn';
 const IN_PROGRESS = 'in_progress';
 const FINISHED = 'finished';
 
+const ONE_ROW_BEFORE = -1;
+const ONE_ROW_AFTER = 1;
+const ONE_COL_BEFORE = -1;
+const ONE_COL_AFTER = 1;
+
+const ONE_COL_DIFFERENCE = 1;
+const ONE_ROW_DIFFERENCE = 1;
+
+const TWO_HORIZONTAL_SQUARES = 2;
+const ONE_VERTICAL_SQUARE = 1;
+
+const TWO_VERTICAL_SQUARES = 2;
+const ONE_HORIZONTAL_SQUARE = 1;
+
 const BAD_REQUEST = 400;
 const PORT_NUMBER = 300;
 
@@ -192,20 +206,126 @@ function isValidSquare(square) {
   }
 }
 
-/*This function checks whether a chess piece can move to its final destination
-based on the particular piece's rules. First, the function checks that the player
-is not moving a piece to its own location and it checks that the piece being moved 
-belongs to the player. These rules apply regardless of chess piece that is selected
-to move. The switch case then applies different rules dpeending on the piece selected.
-Currently, only the functionality of pawns has been implemented for the minimum viable
-product. If the pawn is white, the code implements functionality that allows a pawn to
-(1) move up one spot (as long as there are no pieces in the next spot)
-(2) move two spots forward if the pawn is at starting position and there are no
-other pieces in the destination.
-(3) capture a piece diagonally (checks if pawn moves diagonally and moves to a
-position occupied by an enemy chess piece).
+/*The isBlockedDiagonal function serves to determine if there are any obstructing pieces in the diagonal path between two given chessboard squares. 
+This function takes as input the coordinates of the starting square (fromRow and fromCol), the target square (toRow and toCol), and the board, 
+which represents the current state of the chessboard. It calculates the direction of movement by comparing the target square's coordinates with the 
+starting square and then iterates along the diagonal path, checking each square in between. 
+If it encounters a piece on the path, it returns true, indicating that the diagonal path is blocked. 
+If the function reaches the target square without encountering any pieces, it returns false, signifying that the diagonal path is clear for movement. 
+This function is particularly useful for implementing movement rules for pieces that can move diagonally, such as the bishop and queen in a chess game.
+*/
+function isBlockedDiagonal(fromRow, fromCol, toRow, toCol, board){
+  let rowDirection = toRow > fromRow ? ONE_ROW_AFTER : ONE_COL_BEFORE;
+  let colDirection = toCol > fromCol ? ONE_COL_AFTER : ONE_COL_BEFORE;
 
-Without loss of generality, similar functionality is implemented for black pawns.
+  let row_iterator = fromRow + rowDirection;
+  let col_iterator = fromCol + colDirection;
+
+  while(row_iterator !== toRow && col_iterator !== toCol){
+    if(board[row_iterator][col_iterator]){
+      return true;
+    }
+    row_iterator += rowDirection;
+    col_iterator += colDirection;
+  } 
+
+  return false;
+}
+
+/*
+The columnMovement function is designed to evaluate and determine the feasibility of horizontal movement between 
+two columns on a chessboard. 
+It takes into account the starting row and column (fromRow and fromCol) as well as the target row and column 
+(toRow and toCol) as input parameters. 
+The function begins by comparing the starting and target columns to determine the direction of the movement. 
+If the target column is greater than the starting column, the function iterates through the squares between these 
+columns, checking for any obstructing pieces. 
+In case it encounters an obstruction during the iteration, it returns false, indicating that the horizontal path 
+is obstructed. 
+Conversely, if the target column is less than the starting column, the function iterates in the opposite direction 
+to check for obstructions. 
+If no obstructions are found during the iteration, the function returns true, 
+indicating that the horizontal movement is valid and unobstructed. 
+This function is crucial for implementing movement rules for pieces like the rook and queen in a chess game, 
+as they can move horizontally along columns.
+*/
+
+function columnMovement(fromRow, fromCol, toRow, toCol){
+  if(fromCol<toCol){
+    for (let i = fromCol+ONE_COL_AFTER; i<toCol; i++){
+      if(board[fromRow][i]!=null){
+        return false;
+      }
+    }
+    return true;
+  }
+  if(fromCol>toCol){
+    for (let i = toCol; i<fromCol+ONE_COL_BEFORE; i++){
+      if(board[fromRow][col]!=null){
+        return false;
+      }
+    }
+    return true;
+  }
+}
+
+
+/*
+The rowMovement function is designed to assess the viability of vertical movement, specifically from one row 
+to another on a chessboard. 
+This function takes as parameters the starting row and column (fromRow and fromCol) and the target row and 
+column (toRow and toCol). 
+The function begins by comparing the starting row and the target row to determine the direction of movement. 
+If the target row is greater than the starting row, the function iterates through the squares between the 
+starting and target rows, checking for any obstructing pieces along the same column. 
+Should an obstruction be found during the iteration, the function returns false, 
+indicating that the vertical path is blocked. 
+Conversely, if the target row is less than the starting row, the function iterates in the 
+opposite direction to examine for obstructions. 
+If no obstructions are encountered during the iteration, the function returns true, 
+signifying that the vertical movement is permissible and unobstructed. 
+This function is invaluable for implementing movement rules for chess pieces like the rook and queen, 
+as they are capable of moving vertically along rows on the chessboard.
+*/
+
+function rowMovement(fromRow, fromCol, toRow, toCol){
+  if(fromRow<toRow){
+    for(let i = fromRow+ONE_ROW_AFTER; i<toRow; i++){
+      if(board[i][fromCol]!=null){
+        return false;
+      }
+    }
+    return true;
+  }
+  if(fromRow>toRow){
+    for(let i = toRow; i<fromRow+ONE_COL_BEFORE; i++){
+      if(board[i][fromCol]!=null){
+        return false;
+      }
+    }
+    return true;
+  }
+}
+
+/*
+The isValidPieceMove function is a fundamental component of a LocalChess game that evaluates the validity of a 
+move for a given chess piece, considering the current game state. 
+It takes several parameters, including the game state (game), the starting and target squares 
+(fromSquare and toSquare), and the piece being moved (piece). 
+Within the function, it extracts relevant information such as the type and color of the piece, 
+as well as the coordinates of the source and destination squares. 
+The function then proceeds to apply specific movement rules for each type of chess piece, 
+including pawns, rooks, knights, bishops, queens, and kings.
+
+For pawns, it checks for valid pawn moves, considering factors like direction, capturing, and initial double-step 
+moves. 
+Rooks, knights, bishops, queens, and kings each have their unique movement rules, 
+and the function correctly applies these rules to determine the legitimacy of their moves. 
+It also employs helper functions like rowMovement, columnMovement, and isBlockedDiagonal to check for 
+obstructions in the path of movement, ensuring that the move aligns with the rules of chess. 
+The function returns true if the move is valid and allowed, and false if the move is invalid or obstructed. 
+This comprehensive function plays a crucial role in enforcing the rules of LocalChess 
+and enabling the smooth flow of a LocalChess game.
 */
 function isValidPieceMove(game, fromSquare, toSquare, piece) {
   const { board } = game;
@@ -224,35 +344,110 @@ function isValidPieceMove(game, fromSquare, toSquare, piece) {
   switch (type) {
     case PAWN:
       if (color === WHITE) {
-      	let nextRow = fromRow+1;
+      	let nextRow = fromRow+ONE_ROW_AFTER;
         if (toRow == nextRow && fromCol === toCol && board[toRow][toCol]==null) {
           return true;
         }
-        if (fromRow === ROW_2 && toRow == ROW_4 && fromCol === toCol && board[toRow][toCol]==null) {
+        else if (fromRow === ROW_2 && toRow == ROW_4 && fromCol === toCol && board[toRow][toCol]==null) {
           return true;
         }
-        if (toRow == nextRow && Math.abs(fromCol - toCol) === 1 && board[toRow][toCol] && board[toRow][toCol].color === BLACK) {
+        else if (toRow == nextRow && Math.abs(fromCol - toCol) === ONE_COL_DIFFERENCE && board[toRow][toCol] && board[toRow][toCol].color === BLACK) {
           return true;
         }
+        return false;
       } else if (color === BLACK) {
-	        let nextRow = fromRow-1;
+	        let nextRow = fromRow+ONE_ROW_BEFORE;
 	        if (toRow == nextRow && fromCol === toCol && board[toRow][toCol]==null) {
 	          return true;
 	        }
-	        if (fromRow === ROW_7 && toRow == ROW_5 && fromCol === toCol && board[toRow][toCol] == null) {
+	        else if (fromRow === ROW_7 && toRow == ROW_5 && fromCol === toCol && board[toRow][toCol] == null) {
 	          return true;
 	        }
-	        if (toRow == nextRow && Math.abs(fromCol - toCol) === 1 && board[toRow][toCol] && board[toRow][toCol].color === WHITE) {
+	        else if (toRow == nextRow && Math.abs(fromCol - toCol) === ONE_COL_DIFFERENCE && board[toRow][toCol] && board[toRow][toCol].color === WHITE) {
 	          return true;
 	        }
+          return false;
       }
+      break;
+
+    case ROOK:
+      if(fromRow===toRow){
+        return columnMovement(fromRow, fromCol, toRow, toCol);
+      }
+
+      else if(fromCol==toCol){
+        return rowMovement(fromRow, fromCol, toRow, toCol);
+      }
+
+      return false;
+      
+      break;
+
+    case KNIGHT:
+      let knightRowDiff = Math.abs(fromRow-toRow);
+      let knightColDiff = Math.abs(fromCol-toCol);
+
+      if((knightRowDiff === TWO_VERTICAL_SQUARES && knightColDiff === ONE_HORIZONTAL_SQUARE) || (knightRowDiff == ONE_VERTICAL_SQUARE && knightColDiff == TWO_HORIZONTAL_SQUARES)){
+        return true;
+      }
+      return false;
+      break;
+
+    case BISHOP:
+       let bishopRowDiff = Math.abs(fromRow-toRow);
+       let bishopColDiff = Math.abs(fromCol-toCol);
+
+       if(bishopRowDiff === bishopColDiff){
+
+         if(!isBlockedDiagonal(fromRow, fromCol, toRow, toCol, board)){
+            return true;
+         }
+
+       }
+
+       return false;
+
+       break;
+
+    case QUEEN:
+      if(fromRow===toRow){
+        return columnMovement(fromRow, fromCol, toRow, toCol);
+      }
+
+      if(fromCol==toCol){
+        return rowMovement(fromRow, fromCol, toRow, toCol);
+      }
+
+      let queenRowDiff = Math.abs(fromRow-toRow);
+      let queenColDiff = Math.abs(fromCol-toCol);
+
+      if(queenRowDiff === queenColDiff){
+
+        if(!isBlockedDiagonal(fromRow, fromCol, toRow, toCol, board)){
+            return true;
+         }
+
+      }
+
+      return false;
+
+      break;
+
+    case KING:
+      let kingRowDiff = Math.abs(fromRow-toRow);
+      let kingColDiff = Math.abs(fromCol-toCol);
+
+      if(kingRowDiff<=1 && kingColDiff<=1){
+        return true;
+      }
+
+      return false;
+
       break;
 
     default:
       return false; 
-  }
-
-  return false; 
+  } 
 }
 
 /*This function finds the player's king by traversing through the whole board. 
