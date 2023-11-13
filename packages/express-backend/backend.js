@@ -516,8 +516,6 @@ function checkGameResult(game) {
   }
 }
 
-let game = initializeNewGame(); 
-
 app.use(bodyParser.json());
 
 app.post('/move', (req, res) => {
@@ -533,7 +531,8 @@ app.post('/move', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-  res.send("Hello World");
+  let game = initializeNewGame(); 
+  res.send("Created new game");
 });
 
 export default {
