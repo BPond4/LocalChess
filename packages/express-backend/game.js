@@ -11,6 +11,11 @@ const GameSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true
+    },
+    move_list: {
+      type: String,
+      required: true,
+      trim: true
     }
   },
   { collection: "game_list" }

@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import Game from "./game-service"
 
 const app = express();
 const port = 8000;
@@ -17,3 +18,5 @@ app.listen(port, () => {
     `Local Chess listening at http://localhost:${port}`
   );
 });
+
+
