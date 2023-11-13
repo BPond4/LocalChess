@@ -1,9 +1,14 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import cors from "cors";
-import Game from "./game-service"
 
 const app = express();
+const port = 8000;
+
+app.use(express.json());
+
+app.listen(port, () => {
+    console.log(`Local Chess app listening at http://localhost:${port}`);
+});
 
 const ROW_1 = 0;
 const ROW_2 = 1;
