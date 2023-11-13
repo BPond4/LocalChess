@@ -166,7 +166,8 @@ function initializeNewGame() {
   const game = {
     board: initialBoard, 
     currentPlayer: WHITE, 
-    result: IN_PROGRESS
+    result: IN_PROGRESS,
+    history: []
   };
 
   return game;
@@ -494,11 +495,11 @@ function updateGameState(game, fromSquare, toSquare) {
 
   game.currentPlayer = (currentPlayer === WHITE) ? BLACK : WHITE;
 
-  // game.history.push({
-  //   from: fromSquare,
-  //   to: toSquare,
-  //   piece: pieceToMove,
-  // });
+  game.history.push({
+    from: fromSquare,
+    to: toSquare,
+    piece: pieceToMove,
+  });
 
 
 }
