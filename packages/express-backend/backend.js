@@ -1,5 +1,8 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import cors from "cors";
+import Game from "./game-service"
+
 const app = express();
 
 const ROW_1 = 0;
