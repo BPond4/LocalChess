@@ -15,7 +15,8 @@ describe('Chess Game Movement', () => {
 		const board = backend.createInitialBoard();
 		expect(board[0][0].type).toBe('rook');
 		expect(board[0][0].color).toBe('white');
-		// Add tests to check all pieces are in the right square possibly
+		expect(board[0][1].type).toBe('knight')
+		expect(board[0][1].color).toBe('white')
 	  });
 
 	  test('Valid move for pawn from A2 to A3', () => {
@@ -47,6 +48,33 @@ describe('Chess Game Movement', () => {
 		const toSquare = { row: 2, col: 1 };
 		const isValid = backend.isValidMove(game, fromSquare, toSquare);
 		expect(isValid).toBe(true);
+	  });
+
+	  test('Valid move for knight from B1 to C3', () => {
+		const fromSquare = { row: 0, col: 1 };
+		const toSquare = { row: 2, col: 2 };
+		const isValid = backend.isValidMove(game, fromSquare, toSquare);
+		expect(isValid).toBe(true);
+	  });
+
+	  test('Valid move for knight from B1 to A3', () => {
+		const fromSquare = { row: 0, col: 1 };
+		const toSquare = { row: 2, col: 0 };
+		const isValid = backend.isValidMove(game, fromSquare, toSquare);
+		expect(isValid).toBe(true);
+	  });
+
+	  test('Invalid move for knight from B1 to A3 after pawn moved there', () => {
+		const pfrom = { row: 1, col: 0 }
+		const pto = { row: 2, col: 0 }
+		const pbfrom = { row: 6, col: 0 }
+		const pbto = { row: 5, col: 0 }
+		backend.updateGameState(game, pfrom, pto)
+		backend.updateGameState(game, pbfrom, pbto)
+		const kfromSquare = { row: 0, col: 1 };
+		const ktoSquare = { row: 2, col: 0 };
+		const isValid = backend.isValidMove(game, kfromSquare, ktoSquare);
+		expect(isValid).toBe(false);
 	  });
 	
 });
