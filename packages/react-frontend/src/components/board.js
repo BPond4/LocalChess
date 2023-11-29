@@ -10,12 +10,77 @@ const columns = ["a", "b", "c", "d", "e", "f", "g", "h"];
 export default function Board() {
     const [isFlipped, setIsFlipped] = useState(false);
 
+<<<<<<< Updated upstream
     function flipBoard(grid) {
         // Reverse the grid if isFlipped is true
         if (isFlipped) {
           return grid.reverse();
         }
         return grid;
+=======
+  const handleFlipBoard = () => {
+    setGrid((prevGrid) => {
+      const reversedGrid = [...prevGrid].reverse();
+      return reversedGrid.map((data, index) => {
+        const isLeft = index % columns.length === 0;
+        const isBottom = index >= reversedGrid.length - columns.length;
+
+        return { ...data, showRowLabel: isLeft, showColLabel: isBottom };
+      });
+    });
+  };
+
+
+  function move(fromSquare, toSquare) {
+    const promise = fetch('http://localhost:8000/move' , {
+      method: "POST",
+      headers: {
+        "Content-Type" : "application/json"
+      },
+      body:  JSON.stringify([fromSquare, toSquare])
+    });
+
+    return promise;
+  }
+  
+  const handleSquareClick = (column, row) => {
+    console.log("handleSquareClick");
+    setGrid((prevGrid) => {
+      const newGrid = [...prevGrid];
+
+      const selectedIndex = newGrid.findIndex(
+        (data) => data.column === column && data.row === row
+      );
+
+      newGrid[selectedIndex] = { ...newGrid[selectedIndex], isSelected: true };
+
+      const prevTile = newGrid.findIndex(
+        (data) => data.isSelected === true && (data.column !== column || data.row !== row)
+      );
+      console.log("PrevTile: ",newGrid[prevTile]);
+      if (prevTile!==-1) {
+        if (newGrid[prevTile].hasPiece) {
+          console.log("PREVPIECE: ",newGrid[prevTile].chessPiece);
+          const tempChessPiece = newGrid[prevTile].chessPiece;
+          move([newGrid[prevTile].row, newGrid[prevTile].column], [newGrid[selectedIndex].row, newGrid[selectedIndex].column])
+            .then(response => response.json())
+            .then(result => {
+              if(result.message== "Valid move"){
+                console.log(result.message);
+                newGrid[selectedIndex] = { ...newGrid[selectedIndex], chessPiece: tempChessPiece, hasPiece: true };
+                newGrid[prevTile] = { ...newGrid[prevTile], chessPiece: null, hasPiece: false };
+              }
+              else{
+                console.log(result.message);
+              }
+          })
+       .catch(error => {
+          console.log("Error: ", error);
+       });
+     }
+        newGrid[selectedIndex] = { ...newGrid[selectedIndex], isSelected: false };
+        newGrid[prevTile] = { ...newGrid[prevTile], isSelected: false };
+>>>>>>> Stashed changes
       }
 
     const handleBoardClick = () => {
@@ -23,7 +88,41 @@ export default function Board() {
         setIsFlipped(!isFlipped);
     };
 
+<<<<<<< Updated upstream
     let grid = [];
+=======
+  //  const handleSquareClick = (column, row) => {
+  //   setGrid((prevGrid) => {
+  //     const newGrid = [...prevGrid];
+
+  //     const selectedIndex = newGrid.findIndex(
+  //       (data) => data.column === column && data.row === row
+  //     );
+
+  //     newGrid[selectedIndex] = { ...newGrid[selectedIndex], isSelected: true };
+
+  //     const prevTile = newGrid.findIndex(
+  //       (data) => data.isSelected === true && (data.column !== column || data.row !== row)
+  //     );
+  //     console.log("PrevTile: ",newGrid[prevTile]);
+  //     if (prevTile!==-1) {
+  //       if (newGrid[prevTile].hasPiece) {
+  //         console.log("PREVPIECE: ",newGrid[prevTile].chessPiece);
+  //         const tempChessPiece = newGrid[prevTile].chessPiece;
+  //         newGrid[selectedIndex] = { ...newGrid[selectedIndex], chessPiece: tempChessPiece, hasPiece: true };
+
+  //         newGrid[prevTile] = { ...newGrid[prevTile], chessPiece: null, hasPiece: false };
+  //         handleFlipBoard();
+  //       }
+  //       newGrid[selectedIndex] = { ...newGrid[selectedIndex], isSelected: false };
+  //       newGrid[prevTile] = { ...newGrid[prevTile], isSelected: false };
+  //     }
+
+  //     return newGrid;
+  //   });
+  // };
+
+>>>>>>> Stashed changes
 
     
     for (let i = rows.length - 1; i >= 0; i--) {
