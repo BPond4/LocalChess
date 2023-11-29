@@ -11,8 +11,6 @@
     "sourceType": "module"
   },
   "rules": {
-    "consistent-return": "error",
-    "eqeqeq": "warn",
     "react/prop-types": 0
   },
   "settings": {
