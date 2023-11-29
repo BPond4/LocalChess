@@ -1,14 +1,22 @@
-import express from 'express';
 import bodyParser from 'body-parser';
+import express from 'express';
+import cors from 'cors';
+//const express = require('express');
+//const cors = require('cors');
 
 const app = express();
-const port = 8001;
+
+const corsOptions = {
+  origin: 'http://localhost:3000', // Replace with the actual domain of your frontend
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+ // credentials: true,
+  optionsSuccessStatus: 204,
+};
+
+
+app.use(cors());
 
 app.use(express.json());
-
-app.listen(port, () => {
-    console.log(`Local Chess app listening at http://localhost:${port}`);
-});
 
 const ROW_1 = 0;
 const ROW_2 = 1;
@@ -85,7 +93,6 @@ function createPieceForInitialPosition(row, col) {
 
   if (row === ROW_1 || row === ROW_8) {
     pieceColor = (row === ROW_1) ? WHITE : BLACK;
-
     switch (col) {
       case COL_A:
       case COL_H:
@@ -111,12 +118,11 @@ function createPieceForInitialPosition(row, col) {
     pieceColor = (row === ROW_2) ? WHITE : BLACK;
   }
 
-  const piece = {
+  let piece = {
     type: pieceType,
     color: pieceColor,
-    position: { row, col }
+    position: {row, col}
   };
-
   return piece;
 }
 
@@ -134,7 +140,7 @@ to create pawn pieces in all the columns.
 If the rows being traversed are none of the previously mentioned rows, the board populates these
 positions with a null value.*/
 function createInitialBoard() {
-  const board = new Array(BOARD_HEIGHT);
+  let board = new Array(BOARD_HEIGHT);
 
   for (let row = ROW_1; row < BOARD_HEIGHT; row++) {
     board[row] = new Array(BOARD_WIDTH);
@@ -166,8 +172,9 @@ function initializeNewGame() {
   const game = {
     board: initialBoard, 
     currentPlayer: WHITE, 
-    result: IN_PROGRESS,
-    history: []
+    result: IN_PROGRESS, 
+    lastMoveHistory: [], 
+    lastBoardHistory: []
   };
 
   return game;
@@ -180,21 +187,40 @@ if the piece is allowed to move to toSquare based on its piece rules. */
 function isValidMove(game, fromSquare, toSquare) {
   const { board, currentPlayer } = game;
 
+  let row = fromSquare[0];
+  let col = fromSquare[1];
+
+    for (let row2 = ROW_1; row2 < BOARD_HEIGHT; row2++) {
+    for (let col2 = COL_A; col2 < BOARD_WIDTH; col2++) {
+      if(board[row2][col2]){
+        // console.log(board[row2][col2].color + " " + board[row2][col2].type);
+      }
+      else{
+        //console.log("("+row2+", "+col2+")");
+      }
+    }
+  }
   if (!isValidSquare(fromSquare) || !isValidSquare(toSquare)) {
+    //console.log("isValidSquare");
     return false;
   }
 
-  const fromPiece = board[fromSquare.row][fromSquare.col];
+  let fromPiece = board[fromSquare[0]][fromSquare[1]]
 
-  if(!fromPiece){
+
+  if(!board[row][col]){
+    //console.log("("+row+", "+col+")");
     return false;
   }
 
-  if(fromPiece.color!==currentPlayer){
+  if(board[row][col].color!==currentPlayer){
+    // console.log("fromPiece.color = " + board[row][col].color);
+    // console.log("currentPlayer = " + currentPlayer);
     return false;
   }
 
-  if (!isValidPieceMove(game, fromSquare, toSquare, fromPiece)) {
+  if (!isValidPieceMove(game, fromSquare, toSquare, board[row][col])) {
+   // console.log("isValidPieceMove");
     return false;
   }
 
@@ -205,7 +231,8 @@ function isValidMove(game, fromSquare, toSquare) {
 of the chessboard. If it is within bounds, the function returns true. Else, it
 returns false. */
 function isValidSquare(square) {
-  const { row, col } = square;
+  const row = square[0];
+  const col = square[1];
   
   if (row >= ROW_1 && row < BOARD_HEIGHT && col >= COL_A && col < BOARD_WIDTH) {
     return true;
@@ -223,7 +250,7 @@ If the function reaches the target square without encountering any pieces, it re
 This function is particularly useful for implementing movement rules for pieces that can move diagonally, such as the bishop and queen in a chess game.
 */
 function isBlockedDiagonal(fromRow, fromCol, toRow, toCol, board){
-  let rowDirection = toRow > fromRow ? ONE_ROW_AFTER : ONE_COL_BEFORE;
+  let rowDirection = toRow > fromRow ? ONE_ROW_AFTER : ONE_ROW_BEFORE;
   let colDirection = toCol > fromCol ? ONE_COL_AFTER : ONE_COL_BEFORE;
 
   let row_iterator = fromRow + rowDirection;
@@ -258,7 +285,7 @@ This function is crucial for implementing movement rules for pieces like the roo
 as they can move horizontally along columns.
 */
 
-function isBlockedHorizontal(fromRow, fromCol, toRow, toCol){
+function isBlockedHorizontal(fromRow, fromCol, toRow, toCol, board){
   if(fromCol<toCol){
     for (let i = fromCol+ONE_COL_AFTER; i<toCol; i++){
       if(board[fromRow][i]!=null){
@@ -268,8 +295,8 @@ function isBlockedHorizontal(fromRow, fromCol, toRow, toCol){
     return false;
   }
   if(fromCol>toCol){
-    for (let i = toCol; i<fromCol+ONE_COL_BEFORE; i++){
-      if(board[fromRow][col]!=null){
+    for (let i = toCol + ONE_COL_AFTER; i<fromCol; i++){
+      if(board[fromRow][i]!=null){
         return true;
       }
     }
@@ -296,7 +323,7 @@ This function is invaluable for implementing movement rules for chess pieces lik
 as they are capable of moving vertically along rows on the chessboard.
 */
 
-function isBlockedVertical(fromRow, fromCol, toRow, toCol){
+function isBlockedVertical(fromRow, fromCol, toRow, toCol, board){
   if(fromRow<toRow){
     for(let i = fromRow+ONE_ROW_AFTER; i<toRow; i++){
       if(board[i][fromCol]!=null){
@@ -306,7 +333,7 @@ function isBlockedVertical(fromRow, fromCol, toRow, toCol){
     return false;
   }
   if(fromRow>toRow){
-    for(let i = toRow; i<fromRow+ONE_COL_BEFORE; i++){
+    for(let i = toRow+ONE_ROW_AFTER; i<fromRow; i++){
       if(board[i][fromCol]!=null){
         return true;
       }
@@ -338,8 +365,10 @@ and enabling the smooth flow of a LocalChess game.
 function isValidPieceMove(game, fromSquare, toSquare, piece) {
   const { board } = game;
   const { type, color } = piece;
-  const { row: fromRow, col: fromCol } = fromSquare;
-  const { row: toRow, col: toCol } = toSquare;
+  const fromRow = fromSquare[0];
+  const fromCol = fromSquare[1];
+  const toRow = toSquare[0];
+  const toCol = toSquare[1];
 
   if (fromRow === toRow && fromCol === toCol) {
     return false; 
@@ -352,7 +381,7 @@ function isValidPieceMove(game, fromSquare, toSquare, piece) {
   switch (type) {
     case PAWN:
       if (color === WHITE) {
-      	let nextRow = fromRow+ONE_ROW_AFTER;
+        let nextRow = fromRow+ONE_ROW_AFTER;
         if (toRow == nextRow && fromCol === toCol && board[toRow][toCol]==null) {
           return true;
         }
@@ -364,27 +393,27 @@ function isValidPieceMove(game, fromSquare, toSquare, piece) {
         }
         return false;
       } else if (color === BLACK) {
-	        let nextRow = fromRow+ONE_ROW_BEFORE;
-	        if (toRow == nextRow && fromCol === toCol && board[toRow][toCol]==null) {
-	          return true;
-	        }
-	        else if (fromRow === ROW_7 && toRow == ROW_5 && fromCol === toCol && board[toRow][toCol] == null) {
-	          return true;
-	        }
-	        else if (toRow == nextRow && Math.abs(fromCol - toCol) === ONE_COL_DIFFERENCE && board[toRow][toCol] && board[toRow][toCol].color === WHITE) {
-	          return true;
-	        }
+          let nextRow = fromRow+ONE_ROW_BEFORE;
+          if (toRow == nextRow && fromCol === toCol && board[toRow][toCol]==null) {
+            return true;
+          }
+          else if (fromRow === ROW_7 && toRow == ROW_5 && fromCol === toCol && board[toRow][toCol] == null) {
+            return true;
+          }
+          else if (toRow == nextRow && Math.abs(fromCol - toCol) === ONE_COL_DIFFERENCE && board[toRow][toCol] && board[toRow][toCol].color === WHITE) {
+            return true;
+          }
           return false;
       }
       break;
 
     case ROOK:
       if(fromRow===toRow){
-        return !isBlockedHorizontal(fromRow, fromCol, toRow, toCol);
+        return !isBlockedHorizontal(fromRow, fromCol, toRow, toCol, board);
       }
 
       else if(fromCol==toCol){
-        return !isBlockedVertical(fromRow, fromCol, toRow, toCol);
+        return !isBlockedVertical(fromRow, fromCol, toRow, toCol, board);
       }
 
       return false;
@@ -419,11 +448,11 @@ function isValidPieceMove(game, fromSquare, toSquare, piece) {
 
     case QUEEN:
       if(fromRow===toRow){
-        return !isBlockedHorizontal(fromRow, fromCol, toRow, toCol);
+        return !isBlockedHorizontal(fromRow, fromCol, toRow, toCol, board);
       }
 
       if(fromCol==toCol){
-        return !isBlockedVertical(fromRow, fromCol, toRow, toCol);
+        return !isBlockedVertical(fromRow, fromCol, toRow, toCol, board);
       }
 
       let queenRowDiff = Math.abs(fromRow-toRow);
@@ -486,22 +515,25 @@ recent move to history. */
 
 function updateGameState(game, fromSquare, toSquare) {
   const { board, currentPlayer } = game;
-  const { row: fromRow, col: fromCol } = fromSquare;
-  const { row: toRow, col: toCol } = toSquare;
+  const fromRow = fromSquare[0];
+  const fromCol = fromSquare[1];
+  const toRow = toSquare[0];
+  const toCol = toSquare[1];
 
   const pieceToMove = board[fromRow][fromCol];
   board[toRow][toCol] = pieceToMove;
   board[fromRow][fromCol] = null;
 
   game.currentPlayer = (currentPlayer === WHITE) ? BLACK : WHITE;
+  //console.log("Current player");
 
-  game.history.push({
+  game.lastMoveHistory.push({
     from: fromSquare,
     to: toSquare,
     piece: pieceToMove,
   });
 
-
+  game.lastBoardHistory.push(board);
 }
 
 /*This function checks if the game is finished or not.
@@ -510,31 +542,109 @@ Else, the game is finished (the player's king has been captured.) */
 function checkGameResult(game) {
   const { board, currentPlayer } = game;
   if(findKing(board, currentPlayer)){
-  	return IN_PROGRESS;
+    return IN_PROGRESS;
   }
   else{
-  	return FINISHED;
+    return FINISHED;
   }
 }
 
-app.use(bodyParser.json());
+let game = null;
+
+app.post('/start', (req, res) => {
+  game = initializeNewGame();
+  res.json({ message: "Start" }); 
+})
 
 app.post('/move', (req, res) => {
-  const { fromSquare, toSquare } = req.body;
+  //const { fromSquare, toSquare } = req.body;
 
-  if (isValidMove(game, fromSquare, toSquare)) {
+   let fromSquare = req.body[0];
+   let toSquare = req.body[1];
+
+   fromSquare[0]= parseInt(fromSquare[0], 10)-1;
+   toSquare[0] = parseInt(toSquare[0], 10)-1;
+
+   if(toSquare[1] == 'a'){
+      toSquare[1] = COL_A;
+   }
+   if(toSquare[1] == 'b'){
+      toSquare[1] = COL_B;
+   }
+   if(toSquare[1] == 'c'){
+      toSquare[1] = COL_C;
+   }
+   if(toSquare[1] == 'd'){
+      toSquare[1] = COL_D;
+   }
+   if(toSquare[1] == 'e'){
+      toSquare[1] = COL_E;
+   }
+   if(toSquare[1] == 'f'){
+      toSquare[1] = COL_F;
+   }
+   if(toSquare[1] == 'g'){
+      toSquare[1] = COL_G;
+   }
+   if(toSquare[1] == 'h'){
+      toSquare[1] = COL_H;
+   }
+
+   if(fromSquare[1] == 'a'){
+      fromSquare[1] = COL_A;
+   }
+   if(fromSquare[1] == 'b'){
+      fromSquare[1] = COL_B;
+   }
+   if(fromSquare[1] == 'c'){
+      fromSquare[1] = COL_C;
+   }
+   if(fromSquare[1] == 'd'){
+      fromSquare[1] = COL_D;
+   }
+   if(fromSquare[1] == 'e'){
+      fromSquare[1] = COL_E;
+   }
+   if(fromSquare[1] == 'f'){
+      fromSquare[1] = COL_F;
+   }
+   if(fromSquare[1] == 'g'){
+      fromSquare[1] = COL_G;
+   }
+   if(fromSquare[1] == 'h'){
+      fromSquare[1] = COL_H;
+   }
+   // fromSquare[0] = fromSquare[1];
+   // fromSquare[1] = temp;
+
+   // toSquare[0] = toSquare[1];
+   // toSquare[1] = temp2;
+
+   // console.log(fromSquare);
+   // console.log(toSquare);
+   // console.log("-------");
+
+   const gameResult = checkGameResult(game);
+
+
+  if (isValidMove(game, fromSquare, toSquare) && gameResult == IN_PROGRESS) {
     updateGameState(game, fromSquare, toSquare);
-    const gameResult = checkGameResult(game);
-    res.json({ game: game, result: gameResult });
+   // res.json({ game: game, result: gameResult });
+   res.json({ message: "Valid move" });
   } else {
-    res.status(BAD_REQUEST).json({ error: 'Invalid move' });
+    //res.status(BAD_REQUEST).json({ error: 'Invalid move' });
+    res.json({ message: "Invalid move" });
   }
 });
 
-app.get('/', (req, res) => {
-  let game = initializeNewGame(); 
-  res.send("Created new game");
-});
+// app.get('/', (req, res) => {
+//   res.send("Hello World");
+// });
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+})
+
 
 export default {
   createPieceForInitialPosition,
