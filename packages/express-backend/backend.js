@@ -415,7 +415,7 @@ function isValidPieceMove(game, fromSquare, toSquare, piece) {
   }
 
   switch (type) {
-    case PAWN:
+    case PAWN: {
       if (color === WHITE) {
         let nextRow = fromRow + ONE_ROW_AFTER;
         if (
@@ -466,8 +466,8 @@ function isValidPieceMove(game, fromSquare, toSquare, piece) {
         return false;
       }
       break;
-
-    case ROOK:
+    }
+    case ROOK: {
       if (fromRow === toRow) {
         return !isBlockedHorizontal(
           fromRow,
@@ -489,7 +489,7 @@ function isValidPieceMove(game, fromSquare, toSquare, piece) {
       return false;
 
       break;
-
+    }
     case KNIGHT: {
       let knightRowDiff = Math.abs(fromRow - toRow);
       let knightColDiff = Math.abs(fromCol - toCol);
@@ -527,7 +527,7 @@ function isValidPieceMove(game, fromSquare, toSquare, piece) {
 
       break;
     }
-    case QUEEN:
+    case QUEEN: {
       if (fromRow === toRow) {
         return !isBlockedHorizontal(
           fromRow,
@@ -568,8 +568,8 @@ function isValidPieceMove(game, fromSquare, toSquare, piece) {
       return false;
 
       break;
-
-    case KING:
+    }
+    case KING: {
       let kingRowDiff = Math.abs(fromRow - toRow);
       let kingColDiff = Math.abs(fromCol - toCol);
 
@@ -580,7 +580,7 @@ function isValidPieceMove(game, fromSquare, toSquare, piece) {
       return false;
 
       break;
-
+    }
     default:
       return false;
   }
