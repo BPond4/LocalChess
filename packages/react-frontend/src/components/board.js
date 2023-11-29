@@ -21,7 +21,7 @@ export default function Board() {
         return { ...data, showRowLabel: isLeft, showColLabel: isBottom };
       });
     });
-  };
+  }; 
 
   const updateBoard = () => {
   	setGrid((prevGrid) => {
