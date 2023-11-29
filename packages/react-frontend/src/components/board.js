@@ -23,6 +23,14 @@ export default function Board() {
     });
   };
 
+  const updateBoard = () => {
+  	setGrid((prevGrid) => {
+  		const newGrid = [...prevGrid];
+  		return newGrid;
+});
+
+  };
+
   function newGame(){
   	const promise = fetch('http://localhost:8000/start' , {
   		method: "POST",
@@ -86,7 +94,7 @@ export default function Board() {
                 newGrid[selectedIndex] = { ...newGrid[selectedIndex], chessPiece: tempChessPiece, hasPiece: true, isSelected:false };
                 newGrid[prevTile] = { ...newGrid[prevTile], chessPiece: null, hasPiece: false, isSelected: false };
                 newGrid[selectedIndex] = { ...newGrid[selectedIndex], isSelected: false };
-                handleSquareClick(column, row);
+                updateBoard();
         		console.log(result.message);
               }
               else{

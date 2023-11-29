@@ -452,7 +452,6 @@ function isValidPieceMove(game, fromSquare, toSquare, piece) {
       }
 
       if(fromCol==toCol){
-        console.log("QUEEN");
         return !isBlockedVertical(fromRow, fromCol, toRow, toCol, board);
       }
 
