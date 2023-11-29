@@ -34,7 +34,7 @@
   transform: translateY(-50%);
 }
 
-.chess-piece{
+.chess-piece {
   display: flex;
   align-items: center;
   justify-content: center;

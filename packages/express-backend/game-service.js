@@ -27,4 +27,4 @@ function updateGame(id, move_list) {
 export default {
   createGame,
   updateGame
-}
+};
