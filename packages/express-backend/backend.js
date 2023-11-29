@@ -193,15 +193,15 @@ function isValidMove(game, fromSquare, toSquare) {
     for (let row2 = ROW_1; row2 < BOARD_HEIGHT; row2++) {
     for (let col2 = COL_A; col2 < BOARD_WIDTH; col2++) {
       if(board[row2][col2]){
-         console.log(board[row2][col2].color + " " + board[row2][col2].type);
+        // console.log(board[row2][col2].color + " " + board[row2][col2].type);
       }
       else{
-        console.log("("+row2+", "+col2+")");
+        //console.log("("+row2+", "+col2+")");
       }
     }
   }
   if (!isValidSquare(fromSquare) || !isValidSquare(toSquare)) {
-    console.log("isValidSquare");
+    //console.log("isValidSquare");
     return false;
   }
 
@@ -209,18 +209,18 @@ function isValidMove(game, fromSquare, toSquare) {
 
 
   if(!board[row][col]){
-    console.log("("+row+", "+col+")");
+    //console.log("("+row+", "+col+")");
     return false;
   }
 
   if(board[row][col].color!==currentPlayer){
-    console.log("fromPiece.color = " + board[row][col].color);
-    console.log("currentPlayer = " + currentPlayer);
+    // console.log("fromPiece.color = " + board[row][col].color);
+    // console.log("currentPlayer = " + currentPlayer);
     return false;
   }
 
   if (!isValidPieceMove(game, fromSquare, toSquare, board[row][col])) {
-    console.log("isValidPieceMove");
+   // console.log("isValidPieceMove");
     return false;
   }
 
@@ -250,7 +250,7 @@ If the function reaches the target square without encountering any pieces, it re
 This function is particularly useful for implementing movement rules for pieces that can move diagonally, such as the bishop and queen in a chess game.
 */
 function isBlockedDiagonal(fromRow, fromCol, toRow, toCol, board){
-  let rowDirection = toRow > fromRow ? ONE_ROW_AFTER : ONE_COL_BEFORE;
+  let rowDirection = toRow > fromRow ? ONE_ROW_AFTER : ONE_ROW_BEFORE;
   let colDirection = toCol > fromCol ? ONE_COL_AFTER : ONE_COL_BEFORE;
 
   let row_iterator = fromRow + rowDirection;
@@ -295,7 +295,7 @@ function isBlockedHorizontal(fromRow, fromCol, toRow, toCol, board){
     return false;
   }
   if(fromCol>toCol){
-    for (let i = toCol; i<fromCol+ONE_COL_BEFORE; i++){
+    for (let i = toCol + ONE_COL_AFTER; i<fromCol; i++){
       if(board[fromRow][i]!=null){
         return true;
       }
@@ -333,7 +333,7 @@ function isBlockedVertical(fromRow, fromCol, toRow, toCol, board){
     return false;
   }
   if(fromRow>toRow){
-    for(let i = toRow; i<fromRow+ONE_COL_BEFORE; i++){
+    for(let i = toRow+ONE_ROW_AFTER; i<fromRow; i++){
       if(board[i][fromCol]!=null){
         return true;
       }
@@ -452,6 +452,7 @@ function isValidPieceMove(game, fromSquare, toSquare, piece) {
       }
 
       if(fromCol==toCol){
+        console.log("QUEEN");
         return !isBlockedVertical(fromRow, fromCol, toRow, toCol, board);
       }
 
@@ -525,6 +526,7 @@ function updateGameState(game, fromSquare, toSquare) {
   board[fromRow][fromCol] = null;
 
   game.currentPlayer = (currentPlayer === WHITE) ? BLACK : WHITE;
+  //console.log("Current player");
 
   game.lastMoveHistory.push({
     from: fromSquare,
@@ -619,9 +621,9 @@ app.post('/move', (req, res) => {
    // toSquare[0] = toSquare[1];
    // toSquare[1] = temp2;
 
-   console.log(fromSquare);
-   console.log(toSquare);
-   console.log("-------");
+   // console.log(fromSquare);
+   // console.log(toSquare);
+   // console.log("-------");
 
    const gameResult = checkGameResult(game);
 

@@ -36,7 +36,18 @@ export default function Board() {
   }
 
 
-  function move(fromSquare, toSquare) {
+  // function move(fromSquare, toSquare) {
+  //   const promise = fetch('http://localhost:8000/move' , {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type" : "application/json"
+  //     },
+  //     body:  JSON.stringify([fromSquare, toSquare])
+  //   });
+  //   console.log("Promise resolved");
+  //   return promise;
+  // }
+   function move(fromSquare, toSquare) {
     const promise = fetch('http://localhost:8000/move' , {
       method: "POST",
       headers: {
@@ -67,23 +78,26 @@ export default function Board() {
         if (newGrid[prevTile].hasPiece) {
           console.log("PREVPIECE: ",newGrid[prevTile].chessPiece);
           const tempChessPiece = newGrid[prevTile].chessPiece;
+
           move([newGrid[prevTile].row, newGrid[prevTile].column], [newGrid[selectedIndex].row, newGrid[selectedIndex].column])
             .then(response => response.json())
             .then(result => {
-              if(result.message== "Valid move"){
-                console.log(result.message);
-                newGrid[selectedIndex] = { ...newGrid[selectedIndex], chessPiece: tempChessPiece, hasPiece: true };
-                newGrid[prevTile] = { ...newGrid[prevTile], chessPiece: null, hasPiece: false };
+              if(result.message=== "Valid move"){
+                newGrid[selectedIndex] = { ...newGrid[selectedIndex], chessPiece: tempChessPiece, hasPiece: true, isSelected:false };
+                newGrid[prevTile] = { ...newGrid[prevTile], chessPiece: null, hasPiece: false, isSelected: false };
+                newGrid[selectedIndex] = { ...newGrid[selectedIndex], isSelected: false };
+                handleSquareClick(column, row);
+        		console.log(result.message);
               }
               else{
-                console.log(result.message);
+        		console.log(result.message);
+        		return newGrid;
               }
           })
        .catch(error => {
           console.log("Error: ", error);
        });
      }
-        newGrid[selectedIndex] = { ...newGrid[selectedIndex], isSelected: false };
         newGrid[prevTile] = { ...newGrid[prevTile], isSelected: false };
       }
 
@@ -91,6 +105,45 @@ export default function Board() {
     });
   };
 
+// const handleSquareClick = (column, row) => {
+//     console.log("handleSquareClick");
+//     setGrid((prevGrid) => {
+//       const newGrid = [...prevGrid];
+
+//       const selectedIndex = newGrid.findIndex(
+//         (data) => data.column === column && data.row === row
+//       );
+
+//       newGrid[selectedIndex] = { ...newGrid[selectedIndex], isSelected: true };
+
+//       const prevTile = newGrid.findIndex(
+//         (data) => data.isSelected === true && (data.column !== column || data.row !== row)
+//       );
+//       console.log("PrevTile: ",newGrid[prevTile]);
+//       if (prevTile!==-1) {
+//         if (newGrid[prevTile].hasPiece) {
+//           console.log("PREVPIECE: ",newGrid[prevTile].chessPiece);
+//           const tempChessPiece = newGrid[prevTile].chessPiece;
+//           const response = await fetch('http://localhost:8000/move' , {
+// 						      method: "POST",
+// 						      headers: {
+// 						        "Content-Type" : "application/json"
+// 						      },
+// 						      body:  JSON.stringify([fromSquare, toSquare])
+// 						    });
+//           const result = await response.json();
+//           if(result.message === "Valid move"){
+//           	newGrid[selectedIndex] = { ...newGrid[selectedIndex], chessPiece: tempChessPiece, hasPiece: true, isSelected:false };
+// 			newGrid[prevTile] = { ...newGrid[prevTile], chessPiece: null, hasPiece: false, isSelected: false };
+//           }
+//      	}
+//         newGrid[selectedIndex] = { ...newGrid[selectedIndex], isSelected: false };
+//         newGrid[prevTile] = { ...newGrid[prevTile], isSelected: false };
+//       }
+
+//       return newGrid;
+//     });
+//   };
   //  const handleSquareClick = (column, row) => {
   //   setGrid((prevGrid) => {
   //     const newGrid = [...prevGrid];
@@ -192,6 +245,7 @@ export default function Board() {
     setGrid(tempGrid);
   }
 
+// eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     newGame()
     .then(response => response.json())
@@ -204,7 +258,7 @@ export default function Board() {
     });
 
   },[]);
-    
+  
   
   
   
