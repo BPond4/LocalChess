@@ -9,7 +9,8 @@
     "start": "node backend.js",
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
     "tdd": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --watchAll",
-    "coverage": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --collectCoverage"
+    "coverage": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --collectCoverage",
+    "lint": "npx eslint . && npx prettier --check ."
   },
   "author": "",
   "license": "ISC",
