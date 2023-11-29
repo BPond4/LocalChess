@@ -29,7 +29,7 @@ export default function Board() {
   		headers: {
   			"Content-Type": "application/json"
   		},
-  		body: JSON.stringify("Start")
+  		body: JSON.stringify(["Start"])
   	});
   	console.log("New game promise resolved.");
   	return promise;

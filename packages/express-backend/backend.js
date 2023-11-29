@@ -548,10 +548,10 @@ function checkGameResult(game) {
   }
 }
 
-let game = initializeNewGame(); 
+let game = null;
 
 app.post('/start', (req, res) => {
-  let game = initializeNewGame();
+  game = initializeNewGame();
   res.json({ message: "Start" }); 
 })
 
