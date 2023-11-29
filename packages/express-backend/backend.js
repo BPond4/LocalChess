@@ -285,7 +285,7 @@ This function is crucial for implementing movement rules for pieces like the roo
 as they can move horizontally along columns.
 */
 
-function isBlockedHorizontal(fromRow, fromCol, toRow, toCol){
+function isBlockedHorizontal(fromRow, fromCol, toRow, toCol, board){
   if(fromCol<toCol){
     for (let i = fromCol+ONE_COL_AFTER; i<toCol; i++){
       if(board[fromRow][i]!=null){
@@ -296,7 +296,7 @@ function isBlockedHorizontal(fromRow, fromCol, toRow, toCol){
   }
   if(fromCol>toCol){
     for (let i = toCol; i<fromCol+ONE_COL_BEFORE; i++){
-      if(board[fromRow][col]!=null){
+      if(board[fromRow][i]!=null){
         return true;
       }
     }
@@ -323,7 +323,7 @@ This function is invaluable for implementing movement rules for chess pieces lik
 as they are capable of moving vertically along rows on the chessboard.
 */
 
-function isBlockedVertical(fromRow, fromCol, toRow, toCol){
+function isBlockedVertical(fromRow, fromCol, toRow, toCol, board){
   if(fromRow<toRow){
     for(let i = fromRow+ONE_ROW_AFTER; i<toRow; i++){
       if(board[i][fromCol]!=null){
@@ -409,11 +409,11 @@ function isValidPieceMove(game, fromSquare, toSquare, piece) {
 
     case ROOK:
       if(fromRow===toRow){
-        return !isBlockedHorizontal(fromRow, fromCol, toRow, toCol);
+        return !isBlockedHorizontal(fromRow, fromCol, toRow, toCol, board);
       }
 
       else if(fromCol==toCol){
-        return !isBlockedVertical(fromRow, fromCol, toRow, toCol);
+        return !isBlockedVertical(fromRow, fromCol, toRow, toCol, board);
       }
 
       return false;
@@ -448,11 +448,11 @@ function isValidPieceMove(game, fromSquare, toSquare, piece) {
 
     case QUEEN:
       if(fromRow===toRow){
-        return !isBlockedHorizontal(fromRow, fromCol, toRow, toCol);
+        return !isBlockedHorizontal(fromRow, fromCol, toRow, toCol, board);
       }
 
       if(fromCol==toCol){
-        return !isBlockedVertical(fromRow, fromCol, toRow, toCol);
+        return !isBlockedVertical(fromRow, fromCol, toRow, toCol, board);
       }
 
       let queenRowDiff = Math.abs(fromRow-toRow);
@@ -618,9 +618,11 @@ app.post('/move', (req, res) => {
    console.log(toSquare);
    console.log("-------");
 
-  if (isValidMove(game, fromSquare, toSquare)) {
+   const gameResult = checkGameResult(game);
+
+
+  if (isValidMove(game, fromSquare, toSquare) && gameResult == IN_PROGRESS) {
     updateGameState(game, fromSquare, toSquare);
-    const gameResult = checkGameResult(game);
    // res.json({ game: game, result: gameResult });
    res.json({ message: "Valid move" });
   } else {
