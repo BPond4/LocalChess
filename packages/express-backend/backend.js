@@ -490,7 +490,7 @@ function isValidPieceMove(game, fromSquare, toSquare, piece) {
 
       break;
 
-    case KNIGHT:
+    case KNIGHT: {
       let knightRowDiff = Math.abs(fromRow - toRow);
       let knightColDiff = Math.abs(fromCol - toCol);
 
@@ -504,8 +504,8 @@ function isValidPieceMove(game, fromSquare, toSquare, piece) {
       }
       return false;
       break;
-
-    case BISHOP:
+    } 
+    case BISHOP: {
       let bishopRowDiff = Math.abs(fromRow - toRow);
       let bishopColDiff = Math.abs(fromCol - toCol);
 
@@ -526,7 +526,7 @@ function isValidPieceMove(game, fromSquare, toSquare, piece) {
       return false;
 
       break;
-
+    }
     case QUEEN:
       if (fromRow === toRow) {
         return !isBlockedHorizontal(

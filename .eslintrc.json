@@ -10,6 +10,9 @@
     },
     "sourceType": "module"
   },
+  "ignorePatterns": [
+    "**/*.test.js"
+  ], 
   "rules": {
     "react/prop-types": 0
   },
