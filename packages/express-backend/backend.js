@@ -1,4 +1,4 @@
-import bodyParser from "body-parser";
+//import bodyParser from "body-parser";
 import express from "express";
 import cors from "cors";
 //const express = require('express');
@@ -6,12 +6,12 @@ import cors from "cors";
 
 const app = express();
 
-const corsOptions = {
-  origin: "http://localhost:3000", // Replace with the actual domain of your frontend
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  // credentials: true,
-  optionsSuccessStatus: 204
-};
+// const corsOptions = {
+//   origin: "http://localhost:3000", // Replace with the actual domain of your frontend
+//   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+//   // credentials: true,
+//   optionsSuccessStatus: 204
+// };
 
 app.use(cors());
 
@@ -19,10 +19,10 @@ app.use(express.json());
 
 const ROW_1 = 0;
 const ROW_2 = 1;
-const ROW_3 = 2;
+// const ROW_3 = 2;
 const ROW_4 = 3;
 const ROW_5 = 4;
-const ROW_6 = 5;
+// const ROW_6 = 5;
 const ROW_7 = 6;
 const ROW_8 = 7;
 
@@ -55,7 +55,7 @@ const ONE_COL_BEFORE = -1;
 const ONE_COL_AFTER = 1;
 
 const ONE_COL_DIFFERENCE = 1;
-const ONE_ROW_DIFFERENCE = 1;
+// const ONE_ROW_DIFFERENCE = 1;
 
 const TWO_HORIZONTAL_SQUARES = 2;
 const ONE_VERTICAL_SQUARE = 1;
@@ -63,8 +63,8 @@ const ONE_VERTICAL_SQUARE = 1;
 const TWO_VERTICAL_SQUARES = 2;
 const ONE_HORIZONTAL_SQUARE = 1;
 
-const BAD_REQUEST = 400;
-const PORT_NUMBER = 300;
+// const BAD_REQUEST = 400;
+// const PORT_NUMBER = 300;
 
 const PORT = 8000;
 
