@@ -21,26 +21,26 @@ export default function Board() {
         return { ...data, showRowLabel: isLeft, showColLabel: isBottom };
       });
     });
-  };
+  }; 
 
   const updateBoard = () => {
-  	setGrid((prevGrid) => {
-  		const newGrid = [...prevGrid];
-  		return newGrid;
+    setGrid((prevGrid) => {
+      const newGrid = [...prevGrid];
+      return newGrid;
 });
 
   };
 
   function newGame(){
-  	const promise = fetch('http://localhost:8000/start' , {
-  		method: "POST",
-  		headers: {
-  			"Content-Type": "application/json"
-  		},
-  		body: JSON.stringify(["Start"])
-  	});
-  	console.log("New game promise resolved.");
-  	return promise;
+    const promise = fetch('http://localhost:8000/start' , {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(["Start"])
+    });
+    console.log("New game promise resolved.");
+    return promise;
   }
 
 
@@ -95,11 +95,11 @@ export default function Board() {
                 newGrid[prevTile] = { ...newGrid[prevTile], chessPiece: null, hasPiece: false, isSelected: false };
                 newGrid[selectedIndex] = { ...newGrid[selectedIndex], isSelected: false };
                 updateBoard();
-        		console.log(result.message);
+            console.log(result.message);
               }
               else{
-        		console.log(result.message);
-        		return newGrid;
+            console.log(result.message);
+            return newGrid;
               }
           })
        .catch(error => {
@@ -133,18 +133,18 @@ export default function Board() {
 //           console.log("PREVPIECE: ",newGrid[prevTile].chessPiece);
 //           const tempChessPiece = newGrid[prevTile].chessPiece;
 //           const response = await fetch('http://localhost:8000/move' , {
-// 						      method: "POST",
-// 						      headers: {
-// 						        "Content-Type" : "application/json"
-// 						      },
-// 						      body:  JSON.stringify([fromSquare, toSquare])
-// 						    });
+//                  method: "POST",
+//                  headers: {
+//                    "Content-Type" : "application/json"
+//                  },
+//                  body:  JSON.stringify([fromSquare, toSquare])
+//                });
 //           const result = await response.json();
 //           if(result.message === "Valid move"){
-//           	newGrid[selectedIndex] = { ...newGrid[selectedIndex], chessPiece: tempChessPiece, hasPiece: true, isSelected:false };
-// 			newGrid[prevTile] = { ...newGrid[prevTile], chessPiece: null, hasPiece: false, isSelected: false };
+//            newGrid[selectedIndex] = { ...newGrid[selectedIndex], chessPiece: tempChessPiece, hasPiece: true, isSelected:false };
+//      newGrid[prevTile] = { ...newGrid[prevTile], chessPiece: null, hasPiece: false, isSelected: false };
 //           }
-//      	}
+//        }
 //         newGrid[selectedIndex] = { ...newGrid[selectedIndex], isSelected: false };
 //         newGrid[prevTile] = { ...newGrid[prevTile], isSelected: false };
 //       }
@@ -185,7 +185,7 @@ export default function Board() {
 
 
   function start(){
-  	let tempGrid = [];
+    let tempGrid = [];
     for (let i = rows.length - 1; i >= 0; i--) {
       for (let j = 0; j < columns.length; j++) {
         const isDark = (i + j + 2) % 2 === 0;
@@ -258,11 +258,11 @@ export default function Board() {
     newGame()
     .then(response => response.json())
     .then(result => {
-    	console.log(result.message);
-    	start();
+      console.log(result.message);
+      start();
     })
     .catch(error => {
-    	console.log("Start Error");
+      console.log("Start Error");
     });
 
   },[]);
