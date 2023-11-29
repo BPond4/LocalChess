@@ -208,7 +208,7 @@ function isValidMove(game, fromSquare, toSquare) {
     return false;
   }
 
-  let fromPiece = board[fromSquare[0]][fromSquare[1]];
+  // let fromPiece = board[fromSquare[0]][fromSquare[1]];
 
   if (!board[row][col]) {
     //console.log("("+row+", "+col+")");
@@ -488,7 +488,7 @@ function isValidPieceMove(game, fromSquare, toSquare, piece) {
 
       return false;
 
-      break;
+      //break;
     }
     case KNIGHT: {
       let knightRowDiff = Math.abs(fromRow - toRow);
@@ -503,7 +503,7 @@ function isValidPieceMove(game, fromSquare, toSquare, piece) {
         return true;
       }
       return false;
-      break;
+      //break;
     } 
     case BISHOP: {
       let bishopRowDiff = Math.abs(fromRow - toRow);
@@ -525,7 +525,7 @@ function isValidPieceMove(game, fromSquare, toSquare, piece) {
 
       return false;
 
-      break;
+      //break;
     }
     case QUEEN: {
       if (fromRow === toRow) {
@@ -567,7 +567,7 @@ function isValidPieceMove(game, fromSquare, toSquare, piece) {
 
       return false;
 
-      break;
+      //break;
     }
     case KING: {
       let kingRowDiff = Math.abs(fromRow - toRow);
@@ -579,7 +579,7 @@ function isValidPieceMove(game, fromSquare, toSquare, piece) {
 
       return false;
 
-      break;
+      //break;
     }
     default:
       return false;
