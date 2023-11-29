@@ -487,26 +487,6 @@ function isValidPieceMove(game, fromSquare, toSquare, piece) {
   } 
 }
 
-/*This function finds the player's king by traversing through the whole board. 
-If the player's king can be found, the king is still not captured. 
-If the player's king can not be found, then the king has been captured. 
-
-This variant of chess does not have checks or checkmate. A player wins instead
-by capturing the enemy king.*/
-
-function findKing(board, player) {
-  for (let row = ROW_1; row < BOARD_HEIGHT; row++) {
-    for (let col = COL_A; col < BOARD_WIDTH; col++) {
-      if (board[row] && board[row][col] !== null) {
-        const piece = board[row][col];
-        if (piece && piece.type === KING && piece.color === player) {
-          return true;
-        }
-      }
-    }
-  }
-  return false;
-}
 
 
 /* This function is used to update the current game state and board. 
