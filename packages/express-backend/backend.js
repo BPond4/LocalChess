@@ -550,6 +550,11 @@ function checkGameResult(game) {
 
 let game = initializeNewGame(); 
 
+app.post('/start', (req, res) => {
+  let game = initializeNewGame();
+  res.json({ message: "Start" }); 
+})
+
 app.post('/move', (req, res) => {
   //const { fromSquare, toSquare } = req.body;
 

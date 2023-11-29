@@ -23,6 +23,18 @@ export default function Board() {
     });
   };
 
+  function newGame(){
+  	const promise = fetch('http://localhost:8000/start' , {
+  		method: "POST",
+  		headers: {
+  			"Content-Type": "application/json"
+  		},
+  		body: JSON.stringify("Start")
+  	});
+  	console.log("New game promise resolved.");
+  	return promise;
+  }
+
 
   function move(fromSquare, toSquare) {
     const promise = fetch('http://localhost:8000/move' , {
@@ -32,7 +44,7 @@ export default function Board() {
       },
       body:  JSON.stringify([fromSquare, toSquare])
     });
-
+    console.log("Promise resolved");
     return promise;
   }
   
@@ -111,10 +123,8 @@ export default function Board() {
   // };
 
 
-
-
-  useEffect(() => {
-    let tempGrid = [];
+  function start(){
+  	let tempGrid = [];
     for (let i = rows.length - 1; i >= 0; i--) {
       for (let j = 0; j < columns.length; j++) {
         const isDark = (i + j + 2) % 2 === 0;
@@ -180,6 +190,18 @@ export default function Board() {
     }
     
     setGrid(tempGrid);
+  }
+
+  useEffect(() => {
+    newGame()
+    .then(response => response.json())
+    .then(result => {
+    	console.log(result.message);
+    	start();
+    })
+    .catch(error => {
+    	console.log("Start Error");
+    });
 
   },[]);
     
