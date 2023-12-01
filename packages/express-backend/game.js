@@ -18,7 +18,7 @@ const GameSchema = new mongoose.Schema(
       trim: true
     }
   },
-  { collection: "game_list" }
+  { collection: "games" }
 );
 
 const Game = mongoose.model("Game", GameSchema);
