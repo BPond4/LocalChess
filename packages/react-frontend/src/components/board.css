@@ -16,8 +16,16 @@
   background-color: cornsilk;
 }
 
+#board-class .selected-light-square {
+  background-color: #ffd0b4;
+}
+
 #board-class .dark-square {
   background-color: chocolate;
+}
+
+#board-class .selected-dark-square {
+  background-color: #d24900;
 }
 
 .bottom-center {
