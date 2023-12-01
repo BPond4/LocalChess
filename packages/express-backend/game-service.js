@@ -10,8 +10,8 @@ mongoose
   .catch((error) => console.log(error));
 
 function createGame(game) {
-  const game = new gameModel(game);
-  const promise = game.save();
+  const newGame = new gameModel(game);
+  const promise = newGame.save();
   return promise;
 }
 
