@@ -76,6 +76,20 @@ describe('Chess Game Movement', () => {
 		const isValid = backend.isValidMove(game, kfromSquare, ktoSquare);
 		expect(isValid).toBe(false);
 	  });
+
+
+	  test('Invalid move for knight from B1 to B2 - even if free since not valid way to move', () => {
+		const pfrom = { row: 1, col: 1 }
+		const pto = { row: 2, col: 1 }
+		const pbfrom = { row: 6, col: 0 }
+		const pbto = { row: 5, col: 0 }
+		backend.updateGameState(game, pfrom, pto)
+		backend.updateGameState(game, pbfrom, pbto)
+		const kfromSquare = { row: 0, col: 1 };
+		const ktoSquare = { row: 1, col: 1 };
+		const isValid = backend.isValidMove(game, kfromSquare, ktoSquare);
+		expect(isValid).toBe(false);
+	  });
 	
 });
 
