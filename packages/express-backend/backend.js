@@ -504,7 +504,7 @@ function isValidPieceMove(game, fromSquare, toSquare, piece) {
       }
       return false;
       //break;
-    } 
+    }
     case BISHOP: {
       let bishopRowDiff = Math.abs(fromRow - toRow);
       let bishopColDiff = Math.abs(fromCol - toCol);
@@ -586,7 +586,6 @@ function isValidPieceMove(game, fromSquare, toSquare, piece) {
   }
 }
 
-
 /*This function finds the player's king by traversing through the whole board. 
 If the player's king can be found, the king is still not captured. 
 If the player's king can not be found, then the king has been captured. 
@@ -599,7 +598,11 @@ function findKing(board, player) {
     for (let col = COL_A; col < BOARD_WIDTH; col++) {
       if (board[row] && board[row][col] !== null) {
         const piece = board[row][col];
-        if (piece && piece.type === KING && piece.color === player) {
+        if (
+          piece &&
+          piece.type === KING &&
+          piece.color === player
+        ) {
           return true;
         }
       }
@@ -607,9 +610,6 @@ function findKing(board, player) {
   }
   return false;
 }
-
-
-
 
 /* This function is used to update the current game state and board. 
 It also switches been both players' turns as well as pushing the most
