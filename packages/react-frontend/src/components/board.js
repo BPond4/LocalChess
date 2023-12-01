@@ -213,15 +213,13 @@ export default function Board() {
   //   });
   // };
 
-  
-
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     newGame()
       .then((response) => response.json())
       .then((result) => {
         console.log(result.message);
-        setGrid(start());
+        setGrid(start(handleSquareClick));
       })
       .catch((error) => {
         console.log("Start Error");
@@ -240,7 +238,7 @@ export default function Board() {
   );
 }
 
-function start() {
+function start(onClick) {
   let tempGrid = [];
   for (let i = rows.length - 1; i >= 0; i--) {
     for (let j = 0; j < columns.length; j++) {
@@ -259,40 +257,22 @@ function start() {
       } else if (i === 1) {
         chessPiece = "/Chess_plt60.png";
         hasPiece = true;
-      } else if (
-        (i === 0 && j === 0) ||
-        (i === 0 && j === 7)
-      ) {
+      } else if ((i === 0 && j === 0) || (i === 0 && j === 7)) {
         chessPiece = "/Chess_rlt60.png";
         hasPiece = true;
-      } else if (
-        (i === 7 && j === 7) ||
-        (i === 7 && j === 0)
-      ) {
+      } else if ((i === 7 && j === 7) || (i === 7 && j === 0)) {
         chessPiece = "/Chess_rdt60.png";
         hasPiece = true;
-      } else if (
-        (i === 0 && j === 1) ||
-        (i === 0 && j === 6)
-      ) {
+      } else if ((i === 0 && j === 1) || (i === 0 && j === 6)) {
         chessPiece = "/Chess_nlt60.png";
         hasPiece = true;
-      } else if (
-        (i === 7 && j === 6) ||
-        (i === 7 && j === 1)
-      ) {
+      } else if ((i === 7 && j === 6) || (i === 7 && j === 1)) {
         chessPiece = "/Chess_ndt60.png";
         hasPiece = true;
-      } else if (
-        (i === 0 && j === 2) ||
-        (i === 0 && j === 5)
-      ) {
+      } else if ((i === 0 && j === 2) || (i === 0 && j === 5)) {
         chessPiece = "/Chess_blt60.png";
         hasPiece = true;
-      } else if (
-        (i === 7 && j === 5) ||
-        (i === 7 && j === 2)
-      ) {
+      } else if ((i === 7 && j === 5) || (i === 7 && j === 2)) {
         chessPiece = "/Chess_bdt60.png";
         hasPiece = true;
       } else if (i === 0 && j === 3) {
@@ -317,7 +297,7 @@ function start() {
         isDark: isDark,
         showRowLabel: showRowLabel,
         showColLabel: showColLabel,
-        onClick: handleSquareClick,
+        onClick: onClick,
         hasPiece: hasPiece,
         isSelected: false
       });
