@@ -1,6 +1,7 @@
 //import bodyParser from "body-parser";
 import express from "express";
 import cors from "cors";
+import Game from "./game-service"
 //const express = require('express');
 //const cors = require('cors');
 
@@ -170,7 +171,7 @@ The board is set to its initalState.
 The current player selected is white (white moves first in chess).
 The result of the game is in progress (nobody won or lost so far).
 The history is left blank (no moves have been made yet). */
-function initializeNewGame() {
+function initializeNewGame(gameid) {
   const initialBoard = createInitialBoard();
 
   const game = {
@@ -178,7 +179,8 @@ function initializeNewGame() {
     currentPlayer: WHITE,
     result: IN_PROGRESS,
     lastMoveHistory: [],
-    lastBoardHistory: []
+    lastBoardHistory: [],
+    gid: gameid
   };
 
   return game;
@@ -610,6 +612,14 @@ function updateGameState(game, fromSquare, toSquare) {
     piece: pieceToMove
   });
 
+  Game.updateGame(game.gid, game.lastMoveHistory)
+    .then((result) => {
+      console.log("game updated in database");
+    })
+    .catch((error) => {
+      console.error("error updating game in database", error);
+    });
+
   game.lastBoardHistory.push(board);
 }
 
@@ -628,8 +638,15 @@ function checkGameResult(game) {
 let game = null;
 
 app.post("/start", (req, res) => {
-  game = initializeNewGame();
-  res.json({ message: "Start" });
+  let newGamesTableEntry = req.body;
+  Game.createGame(newGamesTableEntry)
+    .then((savedGame) => {
+      game = initializeNewGame(savedGame._id);
+      res.json({ message: "Start", GID: savedGame._id });
+    })
+    .catch((error) => {
+      console.error("Error saving game:", error);
+    });
 });
 
 app.post("/move", (req, res) => {

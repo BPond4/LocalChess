@@ -13,12 +13,17 @@ const GameSchema = new mongoose.Schema(
       trim: true
     },
     move_list: {
+      type: [],
+      required: true,
+      trim: true
+    },
+    winner: {
       type: String,
       required: true,
       trim: true
     }
   },
-  { collection: "game_list" }
+  { collection: "games" }
 );
 
 const Game = mongoose.model("Game", GameSchema);
