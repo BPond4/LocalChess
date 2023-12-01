@@ -311,7 +311,7 @@ export default function Board() {
       .catch((error) => {
         console.log("Start Error");
       });
-  }, []);
+  }, [start]);
 
   return (
     <div>
