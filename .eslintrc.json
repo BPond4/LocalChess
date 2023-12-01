@@ -10,9 +10,10 @@
     },
     "sourceType": "module"
   },
+  "ignorePatterns": [
+    "**/*.test.js"
+  ], 
   "rules": {
-    "consistent-return": "error",
-    "eqeqeq": "warn",
     "react/prop-types": 0
   },
   "settings": {

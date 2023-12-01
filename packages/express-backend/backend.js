@@ -1,18 +1,17 @@
-import bodyParser from 'body-parser';
-import express from 'express';
-import cors from 'cors';
+//import bodyParser from "body-parser";
+import express from "express";
+import cors from "cors";
 //const express = require('express');
 //const cors = require('cors');
 
 const app = express();
 
-const corsOptions = {
-  origin: 'http://localhost:3000', // Replace with the actual domain of your frontend
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
- // credentials: true,
-  optionsSuccessStatus: 204,
-};
-
+// const corsOptions = {
+//   origin: "http://localhost:3000", // Replace with the actual domain of your frontend
+//   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+//   // credentials: true,
+//   optionsSuccessStatus: 204
+// };
 
 app.use(cors());
 
@@ -20,10 +19,10 @@ app.use(express.json());
 
 const ROW_1 = 0;
 const ROW_2 = 1;
-const ROW_3 = 2;
+// const ROW_3 = 2;
 const ROW_4 = 3;
 const ROW_5 = 4;
-const ROW_6 = 5;
+// const ROW_6 = 5;
 const ROW_7 = 6;
 const ROW_8 = 7;
 
@@ -39,16 +38,16 @@ const COL_H = 7;
 const BOARD_HEIGHT = 8;
 const BOARD_WIDTH = 8;
 
-const WHITE = 'white';
-const BLACK = 'black';
-const ROOK = 'rook';
-const KNIGHT = 'knight';
-const BISHOP = 'bishop';
-const QUEEN = 'queen';
-const KING = 'king';
-const PAWN = 'pawn';
-const IN_PROGRESS = 'in_progress';
-const FINISHED = 'finished';
+const WHITE = "white";
+const BLACK = "black";
+const ROOK = "rook";
+const KNIGHT = "knight";
+const BISHOP = "bishop";
+const QUEEN = "queen";
+const KING = "king";
+const PAWN = "pawn";
+const IN_PROGRESS = "in_progress";
+const FINISHED = "finished";
 
 const ONE_ROW_BEFORE = -1;
 const ONE_ROW_AFTER = 1;
@@ -56,7 +55,7 @@ const ONE_COL_BEFORE = -1;
 const ONE_COL_AFTER = 1;
 
 const ONE_COL_DIFFERENCE = 1;
-const ONE_ROW_DIFFERENCE = 1;
+// const ONE_ROW_DIFFERENCE = 1;
 
 const TWO_HORIZONTAL_SQUARES = 2;
 const ONE_VERTICAL_SQUARE = 1;
@@ -64,11 +63,10 @@ const ONE_VERTICAL_SQUARE = 1;
 const TWO_VERTICAL_SQUARES = 2;
 const ONE_HORIZONTAL_SQUARE = 1;
 
-const BAD_REQUEST = 400;
-const PORT_NUMBER = 300;
+// const BAD_REQUEST = 400;
+// const PORT_NUMBER = 300;
 
 const PORT = 8000;
-
 
 /* This function creates the appropiate piece type with the appropiate color
 and position depending on the row and column it is given. 
@@ -92,7 +90,7 @@ function createPieceForInitialPosition(row, col) {
   let pieceColor = null;
 
   if (row === ROW_1 || row === ROW_8) {
-    pieceColor = (row === ROW_1) ? WHITE : BLACK;
+    pieceColor = row === ROW_1 ? WHITE : BLACK;
     switch (col) {
       case COL_A:
       case COL_H:
@@ -115,13 +113,13 @@ function createPieceForInitialPosition(row, col) {
     }
   } else if (row === ROW_2 || row === ROW_7) {
     pieceType = PAWN;
-    pieceColor = (row === ROW_2) ? WHITE : BLACK;
+    pieceColor = row === ROW_2 ? WHITE : BLACK;
   }
 
   let piece = {
     type: pieceType,
     color: pieceColor,
-    position: {row, col}
+    position: { row, col }
   };
   return piece;
 }
@@ -149,9 +147,15 @@ function createInitialBoard() {
   for (let row = ROW_1; row < BOARD_HEIGHT; row++) {
     for (let col = COL_A; col < BOARD_WIDTH; col++) {
       if (row === ROW_1 || row === ROW_8) {
-        board[row][col] = createPieceForInitialPosition(row, col);
+        board[row][col] = createPieceForInitialPosition(
+          row,
+          col
+        );
       } else if (row === ROW_2 || row === ROW_7) {
-        board[row][col] = createPieceForInitialPosition(row, col);
+        board[row][col] = createPieceForInitialPosition(
+          row,
+          col
+        );
       } else {
         board[row][col] = null;
       }
@@ -167,13 +171,13 @@ The current player selected is white (white moves first in chess).
 The result of the game is in progress (nobody won or lost so far).
 The history is left blank (no moves have been made yet). */
 function initializeNewGame() {
-  const initialBoard = createInitialBoard(); 
-  
+  const initialBoard = createInitialBoard();
+
   const game = {
-    board: initialBoard, 
-    currentPlayer: WHITE, 
-    result: IN_PROGRESS, 
-    lastMoveHistory: [], 
+    board: initialBoard,
+    currentPlayer: WHITE,
+    result: IN_PROGRESS,
+    lastMoveHistory: [],
     lastBoardHistory: []
   };
 
@@ -190,12 +194,11 @@ function isValidMove(game, fromSquare, toSquare) {
   let row = fromSquare[0];
   let col = fromSquare[1];
 
-    for (let row2 = ROW_1; row2 < BOARD_HEIGHT; row2++) {
+  for (let row2 = ROW_1; row2 < BOARD_HEIGHT; row2++) {
     for (let col2 = COL_A; col2 < BOARD_WIDTH; col2++) {
-      if(board[row2][col2]){
+      if (board[row2][col2]) {
         // console.log(board[row2][col2].color + " " + board[row2][col2].type);
-      }
-      else{
+      } else {
         //console.log("("+row2+", "+col2+")");
       }
     }
@@ -205,22 +208,28 @@ function isValidMove(game, fromSquare, toSquare) {
     return false;
   }
 
-  let fromPiece = board[fromSquare[0]][fromSquare[1]]
+  // let fromPiece = board[fromSquare[0]][fromSquare[1]];
 
-
-  if(!board[row][col]){
+  if (!board[row][col]) {
     //console.log("("+row+", "+col+")");
     return false;
   }
 
-  if(board[row][col].color!==currentPlayer){
+  if (board[row][col].color !== currentPlayer) {
     // console.log("fromPiece.color = " + board[row][col].color);
     // console.log("currentPlayer = " + currentPlayer);
     return false;
   }
 
-  if (!isValidPieceMove(game, fromSquare, toSquare, board[row][col])) {
-   // console.log("isValidPieceMove");
+  if (
+    !isValidPieceMove(
+      game,
+      fromSquare,
+      toSquare,
+      board[row][col]
+    )
+  ) {
+    // console.log("isValidPieceMove");
     return false;
   }
 
@@ -233,8 +242,13 @@ returns false. */
 function isValidSquare(square) {
   const row = square[0];
   const col = square[1];
-  
-  if (row >= ROW_1 && row < BOARD_HEIGHT && col >= COL_A && col < BOARD_WIDTH) {
+
+  if (
+    row >= ROW_1 &&
+    row < BOARD_HEIGHT &&
+    col >= COL_A &&
+    col < BOARD_WIDTH
+  ) {
     return true;
   } else {
     return false;
@@ -249,20 +263,28 @@ If it encounters a piece on the path, it returns true, indicating that the diago
 If the function reaches the target square without encountering any pieces, it returns false, signifying that the diagonal path is clear for movement. 
 This function is particularly useful for implementing movement rules for pieces that can move diagonally, such as the bishop and queen in a chess game.
 */
-function isBlockedDiagonal(fromRow, fromCol, toRow, toCol, board){
-  let rowDirection = toRow > fromRow ? ONE_ROW_AFTER : ONE_ROW_BEFORE;
-  let colDirection = toCol > fromCol ? ONE_COL_AFTER : ONE_COL_BEFORE;
+function isBlockedDiagonal(
+  fromRow,
+  fromCol,
+  toRow,
+  toCol,
+  board
+) {
+  let rowDirection =
+    toRow > fromRow ? ONE_ROW_AFTER : ONE_ROW_BEFORE;
+  let colDirection =
+    toCol > fromCol ? ONE_COL_AFTER : ONE_COL_BEFORE;
 
   let row_iterator = fromRow + rowDirection;
   let col_iterator = fromCol + colDirection;
 
-  while(row_iterator !== toRow && col_iterator !== toCol){
-    if(board[row_iterator][col_iterator]){
+  while (row_iterator !== toRow && col_iterator !== toCol) {
+    if (board[row_iterator][col_iterator]) {
       return true;
     }
     row_iterator += rowDirection;
     col_iterator += colDirection;
-  } 
+  }
 
   return false;
 }
@@ -285,25 +307,30 @@ This function is crucial for implementing movement rules for pieces like the roo
 as they can move horizontally along columns.
 */
 
-function isBlockedHorizontal(fromRow, fromCol, toRow, toCol, board){
-  if(fromCol<toCol){
-    for (let i = fromCol+ONE_COL_AFTER; i<toCol; i++){
-      if(board[fromRow][i]!=null){
+function isBlockedHorizontal(
+  fromRow,
+  fromCol,
+  toRow,
+  toCol,
+  board
+) {
+  if (fromCol < toCol) {
+    for (let i = fromCol + ONE_COL_AFTER; i < toCol; i++) {
+      if (board[fromRow][i] != null) {
         return true;
       }
     }
     return false;
   }
-  if(fromCol>toCol){
-    for (let i = toCol + ONE_COL_AFTER; i<fromCol; i++){
-      if(board[fromRow][i]!=null){
+  if (fromCol > toCol) {
+    for (let i = toCol + ONE_COL_AFTER; i < fromCol; i++) {
+      if (board[fromRow][i] != null) {
         return true;
       }
     }
     return false;
   }
 }
-
 
 /*
 The isBlockedVertical function is designed to assess the viability of vertical movement, specifically from one row 
@@ -323,18 +350,24 @@ This function is invaluable for implementing movement rules for chess pieces lik
 as they are capable of moving vertically along rows on the chessboard.
 */
 
-function isBlockedVertical(fromRow, fromCol, toRow, toCol, board){
-  if(fromRow<toRow){
-    for(let i = fromRow+ONE_ROW_AFTER; i<toRow; i++){
-      if(board[i][fromCol]!=null){
+function isBlockedVertical(
+  fromRow,
+  fromCol,
+  toRow,
+  toCol,
+  board
+) {
+  if (fromRow < toRow) {
+    for (let i = fromRow + ONE_ROW_AFTER; i < toRow; i++) {
+      if (board[i][fromCol] != null) {
         return true;
       }
     }
     return false;
   }
-  if(fromRow>toRow){
-    for(let i = toRow+ONE_ROW_AFTER; i<fromRow; i++){
-      if(board[i][fromCol]!=null){
+  if (fromRow > toRow) {
+    for (let i = toRow + ONE_ROW_AFTER; i < fromRow; i++) {
+      if (board[i][fromCol] != null) {
         return true;
       }
     }
@@ -371,121 +404,188 @@ function isValidPieceMove(game, fromSquare, toSquare, piece) {
   const toCol = toSquare[1];
 
   if (fromRow === toRow && fromCol === toCol) {
-    return false; 
+    return false;
   }
 
-  if (board[toRow][toCol] && board[toRow][toCol].color === color) {
-    return false; 
+  if (
+    board[toRow][toCol] &&
+    board[toRow][toCol].color === color
+  ) {
+    return false;
   }
 
   switch (type) {
-    case PAWN:
+    case PAWN: {
       if (color === WHITE) {
-        let nextRow = fromRow+ONE_ROW_AFTER;
-        if (toRow == nextRow && fromCol === toCol && board[toRow][toCol]==null) {
+        let nextRow = fromRow + ONE_ROW_AFTER;
+        if (
+          toRow == nextRow &&
+          fromCol === toCol &&
+          board[toRow][toCol] == null
+        ) {
           return true;
-        }
-        else if (fromRow === ROW_2 && toRow == ROW_4 && fromCol === toCol && board[toRow][toCol]==null) {
+        } else if (
+          fromRow === ROW_2 &&
+          toRow == ROW_4 &&
+          fromCol === toCol &&
+          board[toRow][toCol] == null
+        ) {
           return true;
-        }
-        else if (toRow == nextRow && Math.abs(fromCol - toCol) === ONE_COL_DIFFERENCE && board[toRow][toCol] && board[toRow][toCol].color === BLACK) {
+        } else if (
+          toRow == nextRow &&
+          Math.abs(fromCol - toCol) === ONE_COL_DIFFERENCE &&
+          board[toRow][toCol] &&
+          board[toRow][toCol].color === BLACK
+        ) {
           return true;
         }
         return false;
       } else if (color === BLACK) {
-          let nextRow = fromRow+ONE_ROW_BEFORE;
-          if (toRow == nextRow && fromCol === toCol && board[toRow][toCol]==null) {
-            return true;
-          }
-          else if (fromRow === ROW_7 && toRow == ROW_5 && fromCol === toCol && board[toRow][toCol] == null) {
-            return true;
-          }
-          else if (toRow == nextRow && Math.abs(fromCol - toCol) === ONE_COL_DIFFERENCE && board[toRow][toCol] && board[toRow][toCol].color === WHITE) {
-            return true;
-          }
-          return false;
+        let nextRow = fromRow + ONE_ROW_BEFORE;
+        if (
+          toRow == nextRow &&
+          fromCol === toCol &&
+          board[toRow][toCol] == null
+        ) {
+          return true;
+        } else if (
+          fromRow === ROW_7 &&
+          toRow == ROW_5 &&
+          fromCol === toCol &&
+          board[toRow][toCol] == null
+        ) {
+          return true;
+        } else if (
+          toRow == nextRow &&
+          Math.abs(fromCol - toCol) === ONE_COL_DIFFERENCE &&
+          board[toRow][toCol] &&
+          board[toRow][toCol].color === WHITE
+        ) {
+          return true;
+        }
+        return false;
       }
       break;
-
-    case ROOK:
-      if(fromRow===toRow){
-        return !isBlockedHorizontal(fromRow, fromCol, toRow, toCol, board);
-      }
-
-      else if(fromCol==toCol){
-        return !isBlockedVertical(fromRow, fromCol, toRow, toCol, board);
+    }
+    case ROOK: {
+      if (fromRow === toRow) {
+        return !isBlockedHorizontal(
+          fromRow,
+          fromCol,
+          toRow,
+          toCol,
+          board
+        );
+      } else if (fromCol == toCol) {
+        return !isBlockedVertical(
+          fromRow,
+          fromCol,
+          toRow,
+          toCol,
+          board
+        );
       }
 
       return false;
-      
-      break;
 
-    case KNIGHT:
-      let knightRowDiff = Math.abs(fromRow-toRow);
-      let knightColDiff = Math.abs(fromCol-toCol);
+      //break;
+    }
+    case KNIGHT: {
+      let knightRowDiff = Math.abs(fromRow - toRow);
+      let knightColDiff = Math.abs(fromCol - toCol);
 
-      if((knightRowDiff === TWO_VERTICAL_SQUARES && knightColDiff === ONE_HORIZONTAL_SQUARE) || (knightRowDiff == ONE_VERTICAL_SQUARE && knightColDiff == TWO_HORIZONTAL_SQUARES)){
+      if (
+        (knightRowDiff === TWO_VERTICAL_SQUARES &&
+          knightColDiff === ONE_HORIZONTAL_SQUARE) ||
+        (knightRowDiff == ONE_VERTICAL_SQUARE &&
+          knightColDiff == TWO_HORIZONTAL_SQUARES)
+      ) {
         return true;
       }
       return false;
-      break;
+      //break;
+    } 
+    case BISHOP: {
+      let bishopRowDiff = Math.abs(fromRow - toRow);
+      let bishopColDiff = Math.abs(fromCol - toCol);
 
-    case BISHOP:
-       let bishopRowDiff = Math.abs(fromRow-toRow);
-       let bishopColDiff = Math.abs(fromCol-toCol);
-
-       if(bishopRowDiff === bishopColDiff){
-
-         if(!isBlockedDiagonal(fromRow, fromCol, toRow, toCol, board)){
-            return true;
-         }
-
-       }
-
-       return false;
-
-       break;
-
-    case QUEEN:
-      if(fromRow===toRow){
-        return !isBlockedHorizontal(fromRow, fromCol, toRow, toCol, board);
-      }
-
-      if(fromCol==toCol){
-        return !isBlockedVertical(fromRow, fromCol, toRow, toCol, board);
-      }
-
-      let queenRowDiff = Math.abs(fromRow-toRow);
-      let queenColDiff = Math.abs(fromCol-toCol);
-
-      if(queenRowDiff === queenColDiff){
-
-        if(!isBlockedDiagonal(fromRow, fromCol, toRow, toCol, board)){
-            return true;
-         }
-
+      if (bishopRowDiff === bishopColDiff) {
+        if (
+          !isBlockedDiagonal(
+            fromRow,
+            fromCol,
+            toRow,
+            toCol,
+            board
+          )
+        ) {
+          return true;
+        }
       }
 
       return false;
 
-      break;
+      //break;
+    }
+    case QUEEN: {
+      if (fromRow === toRow) {
+        return !isBlockedHorizontal(
+          fromRow,
+          fromCol,
+          toRow,
+          toCol,
+          board
+        );
+      }
 
-    case KING:
-      let kingRowDiff = Math.abs(fromRow-toRow);
-      let kingColDiff = Math.abs(fromCol-toCol);
+      if (fromCol == toCol) {
+        return !isBlockedVertical(
+          fromRow,
+          fromCol,
+          toRow,
+          toCol,
+          board
+        );
+      }
 
-      if(kingRowDiff<=1 && kingColDiff<=1){
+      let queenRowDiff = Math.abs(fromRow - toRow);
+      let queenColDiff = Math.abs(fromCol - toCol);
+
+      if (queenRowDiff === queenColDiff) {
+        if (
+          !isBlockedDiagonal(
+            fromRow,
+            fromCol,
+            toRow,
+            toCol,
+            board
+          )
+        ) {
+          return true;
+        }
+      }
+
+      return false;
+
+      //break;
+    }
+    case KING: {
+      let kingRowDiff = Math.abs(fromRow - toRow);
+      let kingColDiff = Math.abs(fromCol - toCol);
+
+      if (kingRowDiff <= 1 && kingColDiff <= 1) {
         return true;
       }
 
       return false;
 
-      break;
-
+      //break;
+    }
     default:
-      return false; 
-  } 
+      return false;
+  }
 }
+
 
 /*This function finds the player's king by traversing through the whole board. 
 If the player's king can be found, the king is still not captured. 
@@ -509,6 +609,8 @@ function findKing(board, player) {
 }
 
 
+
+
 /* This function is used to update the current game state and board. 
 It also switches been both players' turns as well as pushing the most
 recent move to history. */
@@ -524,13 +626,13 @@ function updateGameState(game, fromSquare, toSquare) {
   board[toRow][toCol] = pieceToMove;
   board[fromRow][fromCol] = null;
 
-  game.currentPlayer = (currentPlayer === WHITE) ? BLACK : WHITE;
+  game.currentPlayer = currentPlayer === WHITE ? BLACK : WHITE;
   //console.log("Current player");
 
   game.lastMoveHistory.push({
     from: fromSquare,
     to: toSquare,
-    piece: pieceToMove,
+    piece: pieceToMove
   });
 
   game.lastBoardHistory.push(board);
@@ -541,96 +643,97 @@ If the current player's king can be found, the game is still in progress.
 Else, the game is finished (the player's king has been captured.) */
 function checkGameResult(game) {
   const { board, currentPlayer } = game;
-  if(findKing(board, currentPlayer)){
+  if (findKing(board, currentPlayer)) {
     return IN_PROGRESS;
-  }
-  else{
+  } else {
     return FINISHED;
   }
 }
 
 let game = null;
 
-app.post('/start', (req, res) => {
+app.post("/start", (req, res) => {
   game = initializeNewGame();
-  res.json({ message: "Start" }); 
-})
+  res.json({ message: "Start" });
+});
 
-app.post('/move', (req, res) => {
+app.post("/move", (req, res) => {
   //const { fromSquare, toSquare } = req.body;
 
-   let fromSquare = req.body[0];
-   let toSquare = req.body[1];
+  let fromSquare = req.body[0];
+  let toSquare = req.body[1];
 
-   fromSquare[0]= parseInt(fromSquare[0], 10)-1;
-   toSquare[0] = parseInt(toSquare[0], 10)-1;
+  fromSquare[0] = parseInt(fromSquare[0], 10) - 1;
+  toSquare[0] = parseInt(toSquare[0], 10) - 1;
 
-   if(toSquare[1] == 'a'){
-      toSquare[1] = COL_A;
-   }
-   if(toSquare[1] == 'b'){
-      toSquare[1] = COL_B;
-   }
-   if(toSquare[1] == 'c'){
-      toSquare[1] = COL_C;
-   }
-   if(toSquare[1] == 'd'){
-      toSquare[1] = COL_D;
-   }
-   if(toSquare[1] == 'e'){
-      toSquare[1] = COL_E;
-   }
-   if(toSquare[1] == 'f'){
-      toSquare[1] = COL_F;
-   }
-   if(toSquare[1] == 'g'){
-      toSquare[1] = COL_G;
-   }
-   if(toSquare[1] == 'h'){
-      toSquare[1] = COL_H;
-   }
+  if (toSquare[1] == "a") {
+    toSquare[1] = COL_A;
+  }
+  if (toSquare[1] == "b") {
+    toSquare[1] = COL_B;
+  }
+  if (toSquare[1] == "c") {
+    toSquare[1] = COL_C;
+  }
+  if (toSquare[1] == "d") {
+    toSquare[1] = COL_D;
+  }
+  if (toSquare[1] == "e") {
+    toSquare[1] = COL_E;
+  }
+  if (toSquare[1] == "f") {
+    toSquare[1] = COL_F;
+  }
+  if (toSquare[1] == "g") {
+    toSquare[1] = COL_G;
+  }
+  if (toSquare[1] == "h") {
+    toSquare[1] = COL_H;
+  }
 
-   if(fromSquare[1] == 'a'){
-      fromSquare[1] = COL_A;
-   }
-   if(fromSquare[1] == 'b'){
-      fromSquare[1] = COL_B;
-   }
-   if(fromSquare[1] == 'c'){
-      fromSquare[1] = COL_C;
-   }
-   if(fromSquare[1] == 'd'){
-      fromSquare[1] = COL_D;
-   }
-   if(fromSquare[1] == 'e'){
-      fromSquare[1] = COL_E;
-   }
-   if(fromSquare[1] == 'f'){
-      fromSquare[1] = COL_F;
-   }
-   if(fromSquare[1] == 'g'){
-      fromSquare[1] = COL_G;
-   }
-   if(fromSquare[1] == 'h'){
-      fromSquare[1] = COL_H;
-   }
-   // fromSquare[0] = fromSquare[1];
-   // fromSquare[1] = temp;
+  if (fromSquare[1] == "a") {
+    fromSquare[1] = COL_A;
+  }
+  if (fromSquare[1] == "b") {
+    fromSquare[1] = COL_B;
+  }
+  if (fromSquare[1] == "c") {
+    fromSquare[1] = COL_C;
+  }
+  if (fromSquare[1] == "d") {
+    fromSquare[1] = COL_D;
+  }
+  if (fromSquare[1] == "e") {
+    fromSquare[1] = COL_E;
+  }
+  if (fromSquare[1] == "f") {
+    fromSquare[1] = COL_F;
+  }
+  if (fromSquare[1] == "g") {
+    fromSquare[1] = COL_G;
+  }
+  if (fromSquare[1] == "h") {
+    fromSquare[1] = COL_H;
+  }
+  // fromSquare[0] = fromSquare[1];
+  // fromSquare[1] = temp;
 
-   // toSquare[0] = toSquare[1];
-   // toSquare[1] = temp2;
+  // toSquare[0] = toSquare[1];
+  // toSquare[1] = temp2;
 
-   // console.log(fromSquare);
-   // console.log(toSquare);
-   // console.log("-------");
+  // console.log(fromSquare);
+  // console.log(toSquare);
+  // console.log("-------");
 
-   const gameResult = checkGameResult(game);
+  const gameResult = checkGameResult(game);
 
-
-  if (isValidMove(game, fromSquare, toSquare) && gameResult == IN_PROGRESS) {
+  if (
+    isValidMove(game, fromSquare, toSquare) &&
+    gameResult == IN_PROGRESS
+  ) {
     updateGameState(game, fromSquare, toSquare);
-   // res.json({ game: game, result: gameResult });
-   res.json({ message: "Valid move" });
+    // res.json({ game: game, result: gameResult });
+    res.json({ message: "Valid move" });
   } else {
     //res.status(BAD_REQUEST).json({ error: 'Invalid move' });
     res.json({ message: "Invalid move" });
@@ -643,8 +746,7 @@ app.post('/move', (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
-})
-
+});
 
 export default {
   createPieceForInitialPosition,
@@ -655,5 +757,5 @@ export default {
   isValidPieceMove,
   findKing,
   updateGameState,
-  checkGameResult,
+  checkGameResult
 };
