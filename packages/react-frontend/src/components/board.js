@@ -300,7 +300,6 @@ export default function Board() {
     setGrid(tempGrid);
   }
 
-  
   useEffect(() => {
     newGame()
       .then((response) => response.json())

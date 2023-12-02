@@ -10,9 +10,7 @@
     },
     "sourceType": "module"
   },
-  "ignorePatterns": [
-    "**/*.test.js"
-  ], 
+  "ignorePatterns": ["**/*.test.js"],
   "rules": {
     "react/prop-types": 0,
     "react-hooks/exhaustive-deps": 0
