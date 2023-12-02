@@ -638,7 +638,7 @@ function updateGameState(game, fromSquare, toSquare) {
   });
 
   Game.updateGame(game.gid, game.lastMoveHistory)
-    .then((result) => {
+    .then(() => {
       console.log("game updated in database");
     })
     .catch((error) => {
