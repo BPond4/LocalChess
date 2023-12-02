@@ -300,7 +300,7 @@ export default function Board() {
     setGrid(tempGrid);
   }
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  
   useEffect(() => {
     newGame()
       .then((response) => response.json())
@@ -308,7 +308,7 @@ export default function Board() {
         console.log(result.message);
         start();
       })
-      .catch((error) => {
+      .catch(() => {
         console.log("Start Error");
       });
   }, []);
@@ -317,7 +317,7 @@ export default function Board() {
     <div>
       <div id="board-class">
         {grid.map((data) => (
-          <Tile {...data} />
+          <Tile key={`${data.column}${data.row}`} {...data} />
         ))}
       </div>
       <button onClick={handleFlipBoard}>Flip Board</button>
