@@ -761,9 +761,12 @@ app.post("/move", (req, res) => {
 //   res.send("Hello World");
 // });
 
-app.listen("mongodb://127.0.0.1:27017/localchess" || PORT, () => {
-  console.log("REST API is listening.");
-});
+app.listen(
+  "mongodb://127.0.0.1:27017/localchess" || PORT,
+  () => {
+    console.log("REST API is listening.");
+  }
+);
 
 export default {
   createPieceForInitialPosition,
