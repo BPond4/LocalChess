@@ -1,7 +1,7 @@
 //import bodyParser from "body-parser";
 import express from "express";
 import cors from "cors";
-//import Game from "./game-service";
+import Game from "./game-service";
 //const express = require('express');
 //const cors = require('cors');
 
@@ -761,7 +761,7 @@ app.post("/move", (req, res) => {
 //   res.send("Hello World");
 // });
 
-app.listen(process.env.PORT || port, () => {
+app.listen("mongodb://127.0.0.1:27017/localchess" || port, () => {
   console.log("REST API is listening.");
 });
 
