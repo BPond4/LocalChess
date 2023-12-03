@@ -67,7 +67,7 @@ const ONE_HORIZONTAL_SQUARE = 1;
 // const BAD_REQUEST = 400;
 // const PORT_NUMBER = 300;
 
-const PORT = 8000;
+const port = 8000;
 
 /* This function creates the appropiate piece type with the appropiate color
 and position depending on the row and column it is given. 
@@ -762,7 +762,7 @@ app.post("/move", (req, res) => {
 // });
 
 app.listen(
-  "local-chess.azurewebsites.net/localchess" || PORT,
+  process.env.PORT || port,
   () => {
     console.log("REST API is listening.");
   }
