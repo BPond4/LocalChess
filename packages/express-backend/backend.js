@@ -762,7 +762,7 @@ app.post("/move", (req, res) => {
 // });
 
 app.listen(
-  "mongodb://127.0.0.1:27017/localchess" || PORT,
+  "local-chess.azurewebsites.net/localchess" || PORT,
   () => {
     console.log("REST API is listening.");
   }
