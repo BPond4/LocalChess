@@ -60,13 +60,16 @@ export default function Board() {
   //   return promise;
   // }
   function move(fromSquare, toSquare) {
-    const promise = fetch("http://localhost:8000/move", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify([fromSquare, toSquare])
-    });
+    const promise = fetch(
+      "local-chess.azurewebsites.net/move",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify([fromSquare, toSquare])
+      }
+    );
     console.log("Promise resolved");
     return promise;
   }
