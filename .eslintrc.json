@@ -2,7 +2,8 @@
   "extends": ["eslint:recommended", "plugin:react/recommended"],
   "env": {
     "browser": true,
-    "es2023": true
+    "es2023": true,
+    "node" : true
   },
   "parserOptions": {
     "ecmaFeatures": {
