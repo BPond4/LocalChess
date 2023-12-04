@@ -5,7 +5,6 @@ import dotenv from "dotenv";
 mongoose.set("debug", true);
 dotenv.config();
 
-
 mongoose
   .connect(process.env.MONGODB_URI, {
     useUnifiedTopology: true
