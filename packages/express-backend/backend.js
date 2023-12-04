@@ -588,6 +588,24 @@ function isValidPieceMove(game, fromSquare, toSquare, piece) {
   }
 }
 
+function findKing(board, player) {
+  for (let row = ROW_1; row < BOARD_HEIGHT; row++) {
+    for (let col = COL_A; col < BOARD_WIDTH; col++) {
+      if (board[row] && board[row][col] !== null) {
+        const piece = board[row][col];
+        if (
+          piece &&
+          piece.type === KING &&
+          piece.color === player
+        ) {
+          return true;
+        }
+      }
+    }
+  }
+  return false;
+}
+
 /* This function is used to update the current game state and board. 
 It also switches been both players' turns as well as pushing the most
 recent move to history. */
