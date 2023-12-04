@@ -313,8 +313,8 @@ export default function Board() {
         console.log(result.message);
         start();
       })
-      .catch(() => {
-        console.log("Start Error");
+      .catch((error) => {
+        console.error("Start Error", error);
       });
   }, []);
 
