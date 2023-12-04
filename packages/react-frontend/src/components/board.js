@@ -35,7 +35,7 @@ export default function Board() {
 
   function newGame() {
     const promise = fetch(
-      "local-chess.azurewebsites.net/start",
+      "https://lively-bay-012f8ab1e.4.azurestaticapps.net/start",
       {
         method: "POST",
         headers: {
@@ -61,7 +61,7 @@ export default function Board() {
   // }
   function move(fromSquare, toSquare) {
     const promise = fetch(
-      "local-chess.azurewebsites.net/move",
+      "https://lively-bay-012f8ab1e.4.azurestaticapps.net/move",
       {
         method: "POST",
         headers: {
