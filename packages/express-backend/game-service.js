@@ -1,10 +1,13 @@
 import mongoose from "mongoose";
 import gameModel from "./game.js";
+import dotenv from "dotenv";
 
 mongoose.set("debug", true);
+dotenv.config();
+
 
 mongoose
-  .connect("mongodb://127.0.0.1:27017/localchess", {
+  .connect(process.env.MONGODB_URI, {
     useUnifiedTopology: true
   })
   .catch((error) => console.log(error));
