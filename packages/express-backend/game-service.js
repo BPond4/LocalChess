@@ -13,8 +13,8 @@ mongoose
 // specified in game.js and inserts it into the games
 // table in the localchess database
 function createGame(game) {
-  const game = new gameModel(game);
-  const promise = game.save();
+  const newGame = new gameModel(game);
+  const promise = newGame.save();
   return promise;
 }
 
