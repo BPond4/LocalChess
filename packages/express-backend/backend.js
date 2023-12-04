@@ -637,13 +637,13 @@ function updateGameState(game, fromSquare, toSquare) {
     piece: pieceToMove
   });
 
-  Game.updateGame(game.gid, game.lastMoveHistory)
-    .then(() => {
-      console.log("game updated in database");
-    })
-    .catch((error) => {
-      console.error("error updating game in database", error);
-    });
+  // Game.updateGame(game.gid, game.lastMoveHistory)
+  //   .then((result) => {
+  //     console.log("game updated in database");
+  //   })
+  //   .catch((error) => {
+  //     console.error("error updating game in database", error);
+  //   });
 
   game.lastBoardHistory.push(board);
 }
@@ -663,15 +663,8 @@ function checkGameResult(game) {
 let game = null;
 
 app.post("/start", (req, res) => {
-  let newGamesTableEntry = req.body;
-  Game.createGame(newGamesTableEntry)
-    .then((savedGame) => {
-      game = initializeNewGame(savedGame._id);
-      res.json({ message: "Start", GID: savedGame._id });
-    })
-    .catch((error) => {
-      console.error("Error saving game:", error);
-    });
+  game = initializeNewGame();
+  res.json({ message: "Start" });
 });
 
 app.post("/move", (req, res) => {
