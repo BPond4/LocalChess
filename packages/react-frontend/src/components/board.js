@@ -35,7 +35,7 @@ export default function Board() {
 
   function newGame() {
     const promise = fetch(
-      "local-chess.azurewebsites.net/start",
+      "https://local-chess.azurewebsites.net/start",
       {
         method: "POST",
         headers: {
