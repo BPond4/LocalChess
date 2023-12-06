@@ -34,21 +34,14 @@ export default function Board() {
   };
 
   function newGame() {
-    const gameData = {
-      "player1": "Nick",
-      "player2": "Kevin",
-      "move_list": [],
-      "winner": "tbd" 
-    }
-
     const promise = fetch(
-      "http://localhost:8000/start",
+      "https://local-chess.azurewebsites.net/start",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(gameData)
+        body: JSON.stringify(["Start"])
       }
     );
     console.log("New game promise resolved.");
@@ -317,7 +310,7 @@ export default function Board() {
     newGame()
       .then((response) => response.json())
       .then((result) => {
-        console.log("new_game_id: " + result);
+        console.log(result.message);
         start();
       })
       .catch((error) => {
