@@ -316,20 +316,6 @@ export default function Board() {
       .catch((error) => {
         console.error("Start Error", error);
       });
-
-      fetchUsers()
-      .then((res) => (res.status === 200 ? res.json() : undefined))
-      .then((json) => {
-        if (json) {
-          setCharacters(json["users_list"]);
-        } else {
-          setCharacters([]);
-        }
-      })
-      .catch((error) => {
-        console.error("Fetch Users Error", error);
-      });
-
   }, []);
 
   return (
