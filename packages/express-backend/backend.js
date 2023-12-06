@@ -1,6 +1,7 @@
 //import bodyParser from "body-parser";
 import express from "express";
 import cors from "cors";
+import { registerUser } from "./auth";
 //import Game from "./game-service.js";
 //const express = require('express');
 //const cors = require('cors');
@@ -753,6 +754,17 @@ app.post("/move", (req, res) => {
 // app.get('/', (req, res) => {
 //   res.send("Hello World");
 // });
+
+app.post("/users", authenticateUser, (req, res) => {
+  const userToAdd = req.body;
+  Users.addUser(userToAdd).then((result) =>
+    res.status(201).send(result)
+  );
+});
+
+app.post("/signup", registerUser);
+
+app.post("/login", registerUser);
 
 app.listen(process.env.PORT || port, () => {
   console.log("REST API is listening.");
