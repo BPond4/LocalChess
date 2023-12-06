@@ -7,7 +7,8 @@ function Tile({
   isDark,
   showRowLabel,
   showColLabel,
-  onClick
+  onClick,
+  isSelected
 }) {
   // Determine the class name based on whether it's a dark or light square
   let squareClass = isDark ? "dark-square" : "light-square";
