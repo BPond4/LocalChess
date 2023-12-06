@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import gameModel from "./game.js";
+
 import dotenv from "dotenv";
 
 mongoose.set("debug", true);
