@@ -1,6 +1,6 @@
 # LocalChess
 
-CSC 307 project creating a local chess website
+Welcome to LocalChess, your go-to platform for enjoying a classic game of chess with friends and family in person! This web application provides a seamless and user-friendly experience for local multiplayer chess games. With an intuitive interface and real-time board updates, LocalChess allows players to engage in face-to-face chess battles, fostering a sense of camaraderie and strategic competition. Say goodbye to physical chessboards and hello to a digital, local multiplayer experience that brings people together over the timeless game of chess. Get ready to make your moves and create lasting memories with LocalChess!
 
 ## Contributing
 
@@ -28,7 +28,7 @@ To get started with code contributions, please follow these steps:
 
 git clone https://github.com/BPond4/LocalChess.git
 
-2. Install the required dependencies:
+2. Install the required dependencies outside of the packages folder and in each directory within the packages folder:
 
 npm install
 
