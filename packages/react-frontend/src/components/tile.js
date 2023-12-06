@@ -12,8 +12,12 @@ function Tile({
 }) {
   // Determine the class name based on whether it's a dark or light square
   let squareClass = isDark ? "dark-square" : "light-square";
-  squareClass = isSelected && isDark ? "selected-dark-square" : squareClass;
-  squareClass = isSelected && !isDark ? "selected-light-square" : squareClass;
+  squareClass =
+    isSelected && isDark ? "selected-dark-square" : squareClass;
+  squareClass =
+    isSelected && !isDark
+      ? "selected-light-square"
+      : squareClass;
 
   const handleClick = () => {
     onClick(column, row);
