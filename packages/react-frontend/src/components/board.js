@@ -34,14 +34,21 @@ export default function Board() {
   };
 
   function newGame() {
+    const game_data = {
+      "player1": "Nick",
+      "player2": "Baylor",
+      "move_list": [],
+      "winner": "tbd" 
+    }
+
     const promise = fetch(
-      "https://local-chess.azurewebsites.net/start",
+      "http://localhost:8000/start",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(["Start"])
+        body: JSON.stringify(game_data)
       }
     );
     console.log("New game promise resolved.");
@@ -61,7 +68,7 @@ export default function Board() {
   // }
   function move(fromSquare, toSquare) {
     const promise = fetch(
-      "https://local-chess.azurewebsites.net/move",
+      "http://localhost:8000/move",
       {
         method: "POST",
         headers: {

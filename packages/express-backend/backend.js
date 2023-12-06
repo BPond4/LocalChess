@@ -1,7 +1,7 @@
 //import bodyParser from "body-parser";
 import express from "express";
 import cors from "cors";
-//import Game from "./game-service.js";
+import Game from "./game-service.js";
 //const express = require('express');
 //const cors = require('cors');
 
@@ -663,8 +663,15 @@ function checkGameResult(game) {
 let game = null;
 
 app.post("/start", (req, res) => {
-  game = initializeNewGame();
-  res.json({ message: "Start" });
+  const new_game = req.body;
+  Game.createGame(new_game)
+    .then((result) => {
+      game = initializeNewGame();
+      res.status(201).send(result._id);
+    })
+    .catch((error) => {
+      console.log("Start endpoint error: " + error);
+    });
 });
 
 app.post("/move", (req, res) => {
