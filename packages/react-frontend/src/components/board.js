@@ -36,7 +36,7 @@ export default function Board() {
   function newGame() {
     const game_data = {
       player1: "Nick",
-      player2: "Baylor",
+      player2: "Kevin",
       move_list: [],
       winner: "tbd"
     };
