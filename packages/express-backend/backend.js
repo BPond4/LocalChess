@@ -666,7 +666,7 @@ app.post("/start", (req, res) => {
   const new_game = req.body;
   Game.createGame(new_game)
     .then((result) => {
-      game = initializeNewGame();
+      game = initializeNewGame(result._id);
       res.status(201).send(result._id);
     })
     .catch((error) => {
@@ -732,15 +732,6 @@ app.post("/move", (req, res) => {
   if (fromSquare[1] == "h") {
     fromSquare[1] = COL_H;
   }
-  // fromSquare[0] = fromSquare[1];
-  // fromSquare[1] = temp;
-
-  // toSquare[0] = toSquare[1];
-  // toSquare[1] = temp2;
-
-  // console.log(fromSquare);
-  // console.log(toSquare);
-  // console.log("-------");
 
   const gameResult = checkGameResult(game);
 
@@ -749,6 +740,13 @@ app.post("/move", (req, res) => {
     gameResult == IN_PROGRESS
   ) {
     updateGameState(game, fromSquare, toSquare);
+    Game.updateGame(game.gid, game.lastMoveHistory)
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((error) => {
+        console.log("updateGame error: " + error);
+      });
     // res.json({ game: game, result: gameResult });
     res.json({ message: "Valid move" });
   } else {
