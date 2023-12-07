@@ -1,7 +1,7 @@
 //import bodyParser from "body-parser";
 import express from "express";
 import cors from "cors";
-import { registerUser } from "./auth";
+import { registerUser, authenticateUser } from "./auth.js";
 //import Game from "./game-service.js";
 //const express = require('express');
 //const cors = require('cors');

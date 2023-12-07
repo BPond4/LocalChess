@@ -1,11 +1,10 @@
 import "./App.css";
 import React, { useState } from "react";
-import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Board from "./components/board";
-import Login from "./components/Login";
+import Board from "./components/board.js";
+import Login from "./components/login.js";
 
-const API_PREFIX = "http://localhost:8000"
+const API_PREFIX = "http://localhost:3000";
 const INVALID_TOKEN = "INVALID_TOKEN";
 
 function App() {
@@ -17,32 +16,13 @@ function App() {
     <Router>
       <div id="app">
         <Routes>
-          <Route path="/" element={<Board fetchUsers={fetchUsers} />} />
+          <Route path="/" element={<Board token={token} />} />
           <Route path="/login" element={<Login handleSubmit={loginUser} />} />
           <Route path="/signup" element={<Login handleSubmit={signupUser} buttonLabel="Sign Up" />} />
         </Routes>
       </div>
     </Router>
   );
-}
-
-function fetchUsers() {
-  const promise = fetch(`${API_PREFIX}/users`, {
-    headers: addAuthHeader()
-  });
-
-  return promise;
-}
-
-function addAuthHeader(otherHeaders = {}) {
-  if (token === INVALID_TOKEN) {
-    return otherHeaders;
-  } else {
-    return {
-      ...otherHeaders,
-      Authorization: `Bearer ${token}`
-    };
-  }
 }
 
 function signupUser(creds) {

@@ -38,6 +38,7 @@
     ]
   },
   "devDependencies": {
+    "bcryptjs": "^2.4.3",
     "react-router-dom": "^6.20.1"
   }
 }

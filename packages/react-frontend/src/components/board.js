@@ -3,10 +3,13 @@ import "./board.css";
 import Tile from "./tile.js";
 //import axios from 'axios';
 
+const API_PREFIX = "http://localhost:3000";
+const INVALID_TOKEN = "INVALID_TOKEN";
+
 const rows = ["1", "2", "3", "4", "5", "6", "7", "8"];
 const columns = ["a", "b", "c", "d", "e", "f", "g", "h"];
 
-export default function Board() {
+export default function Board(props) {
   const [grid, setGrid] = useState([]);
 
   const handleFlipBoard = () => {
@@ -305,6 +308,26 @@ export default function Board() {
 
     setGrid(tempGrid);
   }
+
+
+function fetchUsers() {
+  const promise = fetch(`${API_PREFIX}/users`, {
+    headers: addAuthHeader()
+  });
+
+  return promise;
+}
+
+function addAuthHeader(otherHeaders = {}) {
+  if (props.token === INVALID_TOKEN) {
+    return otherHeaders;
+  } else {
+    return {
+      ...otherHeaders,
+      Authorization: `Bearer ${props.token}`
+    };
+  }
+}
 
   useEffect(() => {
     newGame()
