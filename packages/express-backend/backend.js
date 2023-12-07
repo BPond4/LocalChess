@@ -2,17 +2,8 @@
 import express from "express";
 import cors from "cors";
 import Game from "./game-service.js";
-//const express = require('express');
-//const cors = require('cors');
 
 const app = express();
-
-// const corsOptions = {
-//   origin: "http://localhost:3000", // Replace with the actual domain of your frontend
-//   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-//   // credentials: true,
-//   optionsSuccessStatus: 204
-// };
 
 app.use(cors());
 
@@ -63,9 +54,6 @@ const ONE_VERTICAL_SQUARE = 1;
 
 const TWO_VERTICAL_SQUARES = 2;
 const ONE_HORIZONTAL_SQUARE = 1;
-
-// const BAD_REQUEST = 400;
-// const PORT_NUMBER = 300;
 
 const port = 8000;
 
@@ -637,14 +625,6 @@ function updateGameState(game, fromSquare, toSquare) {
     piece: pieceToMove
   });
 
-  // Game.updateGame(game.gid, game.lastMoveHistory)
-  //   .then((result) => {
-  //     console.log("game updated in database");
-  //   })
-  //   .catch((error) => {
-  //     console.error("error updating game in database", error);
-  //   });
-
   game.lastBoardHistory.push(board);
 }
 
@@ -679,6 +659,7 @@ app.post("/move", (req, res) => {
 
   let fromSquare = req.body[0];
   let toSquare = req.body[1];
+  let game_id = req.body[2];
 
   fromSquare[0] = parseInt(fromSquare[0], 10) - 1;
   toSquare[0] = parseInt(toSquare[0], 10) - 1;
@@ -733,6 +714,10 @@ app.post("/move", (req, res) => {
     fromSquare[1] = COL_H;
   }
 
+  // initialize game to current state
+  // use game_id here in loadGame function
+  console.log(game_id)
+
   const gameResult = checkGameResult(game);
 
   if (
@@ -754,10 +739,6 @@ app.post("/move", (req, res) => {
     res.json({ message: "Invalid move" });
   }
 });
-
-// app.get('/', (req, res) => {
-//   res.send("Hello World");
-// });
 
 app.listen(process.env.PORT || port, () => {
   console.log("REST API is listening.");
