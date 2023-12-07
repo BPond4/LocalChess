@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 const creds = [];
 
 export function registerUser(req, res) {
-    const { username, pwd } = req.body; // from form
+    const { username, pwd } = req.body;
   
     if (!username || !pwd) {
       res.status(400).send("Bad request: Invalid input data.");
@@ -43,7 +43,6 @@ export function registerUser(req, res) {
 
   export function authenticateUser(req, res, next) {
     const authHeader = req.headers["authorization"];
-    //Getting the 2nd part of the auth header (the token)
     const token = authHeader && authHeader.split(" ")[1];
   
     if (!token) {
@@ -66,7 +65,7 @@ export function registerUser(req, res) {
   }
 
   export function loginUser(req, res) {
-    const { username, pwd } = req.body; // from form
+    const { username, pwd } = req.body;
     const retrievedUser = creds.find(
       (c) => c.username === username
     );
