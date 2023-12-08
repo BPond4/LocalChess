@@ -2,17 +2,8 @@
 import express from "express";
 import cors from "cors";
 import Game from "./game-service.js";
-//const express = require('express');
-//const cors = require('cors');
 
 const app = express();
-
-// const corsOptions = {
-//   origin: "http://localhost:3000", // Replace with the actual domain of your frontend
-//   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-//   // credentials: true,
-//   optionsSuccessStatus: 204
-// };
 
 app.use(cors());
 
@@ -63,9 +54,6 @@ const ONE_VERTICAL_SQUARE = 1;
 
 const TWO_VERTICAL_SQUARES = 2;
 const ONE_HORIZONTAL_SQUARE = 1;
-
-// const BAD_REQUEST = 400;
-// const PORT_NUMBER = 300;
 
 const port = 8000;
 
@@ -637,14 +625,6 @@ function updateGameState(game, fromSquare, toSquare) {
     piece: pieceToMove
   });
 
-  // Game.updateGame(game.gid, game.lastMoveHistory)
-  //   .then((result) => {
-  //     console.log("game updated in database");
-  //   })
-  //   .catch((error) => {
-  //     console.error("error updating game in database", error);
-  //   });
-
   game.lastBoardHistory.push(board);
 }
 
@@ -660,13 +640,32 @@ function checkGameResult(game) {
   }
 }
 
+// this function takes in a game id
+// and loads in the current state of 
+// that game from the database
+async function loadGame(gameId) {
+  let game = initializeNewGame(gameId);
+  try {
+    const gameData = await Game.findGameById(gameId);
+    const currentMoveList = gameData.move_list;
+    for (const move of currentMoveList) {
+      const fromSquare = move.from;
+      const toSquare = move.to;
+      updateGameState(game, fromSquare, toSquare);
+    }
+    return game;
+  } catch (error) {
+    console.error("Error getting game by id: ", error);
+  }
+}
+
 let game = null;
 
 app.post("/start", (req, res) => {
   const new_game = req.body;
   Game.createGame(new_game)
     .then((result) => {
-      game = initializeNewGame();
+      game = initializeNewGame(result._id);
       res.status(201).send(result._id);
     })
     .catch((error) => {
@@ -674,11 +673,12 @@ app.post("/start", (req, res) => {
     });
 });
 
-app.post("/move", (req, res) => {
+app.post("/move", async (req, res) => {
   //const { fromSquare, toSquare } = req.body;
 
   let fromSquare = req.body[0];
   let toSquare = req.body[1];
+  let game_id = req.body[2];
 
   fromSquare[0] = parseInt(fromSquare[0], 10) - 1;
   toSquare[0] = parseInt(toSquare[0], 10) - 1;
@@ -732,15 +732,15 @@ app.post("/move", (req, res) => {
   if (fromSquare[1] == "h") {
     fromSquare[1] = COL_H;
   }
-  // fromSquare[0] = fromSquare[1];
-  // fromSquare[1] = temp;
 
-  // toSquare[0] = toSquare[1];
-  // toSquare[1] = temp2;
-
-  // console.log(fromSquare);
-  // console.log(toSquare);
-  // console.log("-------");
+  // initialize game to current state
+  // use game_id here in loadGame function
+  try {
+    game = await loadGame(game_id);
+  }
+  catch (error) {
+    console.error("Load Game error: ", error);
+  }
 
   const gameResult = checkGameResult(game);
 
@@ -749,6 +749,13 @@ app.post("/move", (req, res) => {
     gameResult == IN_PROGRESS
   ) {
     updateGameState(game, fromSquare, toSquare);
+    Game.updateGame(game.gid, game.lastMoveHistory)
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((error) => {
+        console.log("updateGame error: " + error);
+      });
     // res.json({ game: game, result: gameResult });
     res.json({ message: "Valid move" });
   } else {
@@ -756,10 +763,6 @@ app.post("/move", (req, res) => {
     res.json({ message: "Invalid move" });
   }
 });
-
-// app.get('/', (req, res) => {
-//   res.send("Hello World");
-// });
 
 app.listen(process.env.PORT || port, () => {
   console.log("REST API is listening.");

@@ -7,6 +7,7 @@ const rows = ["1", "2", "3", "4", "5", "6", "7", "8"];
 const columns = ["a", "b", "c", "d", "e", "f", "g", "h"];
 
 export default function Board() {
+  let game_id;
   const [grid, setGrid] = useState([]);
 
   const handleFlipBoard = () => {
@@ -55,18 +56,7 @@ export default function Board() {
     return promise;
   }
 
-  // function move(fromSquare, toSquare) {
-  //   const promise = fetch('http://localhost:8000/move' , {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type" : "application/json"
-  //     },
-  //     body:  JSON.stringify([fromSquare, toSquare])
-  //   });
-  //   console.log("Promise resolved");
-  //   return promise;
-  // }
-  function move(fromSquare, toSquare) {
+  function move(fromSquare, toSquare, gid) {
     const promise = fetch(
       "https://local-chess.azurewebsites.net/move",
       {
@@ -74,9 +64,10 @@ export default function Board() {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify([fromSquare, toSquare])
+        body: JSON.stringify([fromSquare, toSquare, gid])
       }
     );
+    console.log(gid);
     console.log("Promise resolved");
     return promise;
   }
@@ -114,7 +105,8 @@ export default function Board() {
             [
               newGrid[selectedIndex].row,
               newGrid[selectedIndex].column
-            ]
+            ],
+            game_id
           )
             .then((response) => response.json())
             .then((result) => {
@@ -155,76 +147,6 @@ export default function Board() {
       return newGrid;
     });
   };
-
-  // const handleSquareClick = (column, row) => {
-  //     console.log("handleSquareClick");
-  //     setGrid((prevGrid) => {
-  //       const newGrid = [...prevGrid];
-
-  //       const selectedIndex = newGrid.findIndex(
-  //         (data) => data.column === column && data.row === row
-  //       );
-
-  //       newGrid[selectedIndex] = { ...newGrid[selectedIndex], isSelected: true };
-
-  //       const prevTile = newGrid.findIndex(
-  //         (data) => data.isSelected === true && (data.column !== column || data.row !== row)
-  //       );
-  //       console.log("PrevTile: ",newGrid[prevTile]);
-  //       if (prevTile!==-1) {
-  //         if (newGrid[prevTile].hasPiece) {
-  //           console.log("PREVPIECE: ",newGrid[prevTile].chessPiece);
-  //           const tempChessPiece = newGrid[prevTile].chessPiece;
-  //           const response = await fetch('http://localhost:8000/move' , {
-  //                  method: "POST",
-  //                  headers: {
-  //                    "Content-Type" : "application/json"
-  //                  },
-  //                  body:  JSON.stringify([fromSquare, toSquare])
-  //                });
-  //           const result = await response.json();
-  //           if(result.message === "Valid move"){
-  //            newGrid[selectedIndex] = { ...newGrid[selectedIndex], chessPiece: tempChessPiece, hasPiece: true, isSelected:false };
-  //      newGrid[prevTile] = { ...newGrid[prevTile], chessPiece: null, hasPiece: false, isSelected: false };
-  //           }
-  //        }
-  //         newGrid[selectedIndex] = { ...newGrid[selectedIndex], isSelected: false };
-  //         newGrid[prevTile] = { ...newGrid[prevTile], isSelected: false };
-  //       }
-
-  //       return newGrid;
-  //     });
-  //   };
-  //  const handleSquareClick = (column, row) => {
-  //   setGrid((prevGrid) => {
-  //     const newGrid = [...prevGrid];
-
-  //     const selectedIndex = newGrid.findIndex(
-  //       (data) => data.column === column && data.row === row
-  //     );
-
-  //     newGrid[selectedIndex] = { ...newGrid[selectedIndex], isSelected: true };
-
-  //     const prevTile = newGrid.findIndex(
-  //       (data) => data.isSelected === true && (data.column !== column || data.row !== row)
-  //     );
-  //     console.log("PrevTile: ",newGrid[prevTile]);
-  //     if (prevTile!==-1) {
-  //       if (newGrid[prevTile].hasPiece) {
-  //         console.log("PREVPIECE: ",newGrid[prevTile].chessPiece);
-  //         const tempChessPiece = newGrid[prevTile].chessPiece;
-  //         newGrid[selectedIndex] = { ...newGrid[selectedIndex], chessPiece: tempChessPiece, hasPiece: true };
-
-  //         newGrid[prevTile] = { ...newGrid[prevTile], chessPiece: null, hasPiece: false };
-  //         handleFlipBoard();
-  //       }
-  //       newGrid[selectedIndex] = { ...newGrid[selectedIndex], isSelected: false };
-  //       newGrid[prevTile] = { ...newGrid[prevTile], isSelected: false };
-  //     }
-
-  //     return newGrid;
-  //   });
-  // };
 
   function start() {
     let tempGrid = [];
@@ -317,7 +239,8 @@ export default function Board() {
     newGame()
       .then((response) => response.json())
       .then((result) => {
-        console.log(result.message);
+        console.log(result);
+        game_id = result;
         start();
       })
       .catch((error) => {
