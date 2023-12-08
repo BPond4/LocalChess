@@ -641,7 +641,7 @@ function checkGameResult(game) {
 }
 
 // this function takes in a game id
-// and loads in the current state of 
+// and loads in the current state of
 // that game from the database
 async function loadGame(gameId) {
   let game = initializeNewGame(gameId);
@@ -737,8 +737,7 @@ app.post("/move", async (req, res) => {
   // use game_id here in loadGame function
   try {
     game = await loadGame(game_id);
-  }
-  catch (error) {
+  } catch (error) {
     console.error("Load Game error: ", error);
   }
 
