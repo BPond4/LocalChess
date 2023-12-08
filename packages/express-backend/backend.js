@@ -640,6 +640,25 @@ function checkGameResult(game) {
   }
 }
 
+// this function takes in a game id
+// and loads in the current state of 
+// that game from the database
+async function loadGame(gameId) {
+  let game = initializeNewGame(gameId);
+  try {
+    const gameData = await Game.findGameById(gameId);
+    const currentMoveList = gameData.move_list;
+    for (const move of currentMoveList) {
+      const fromSquare = move.from;
+      const toSquare = move.to;
+      updateGameState(game, fromSquare, toSquare);
+    }
+    return game;
+  } catch (error) {
+    console.error("Error getting game by id: ", error);
+  }
+}
+
 let game = null;
 
 app.post("/start", (req, res) => {
@@ -654,7 +673,7 @@ app.post("/start", (req, res) => {
     });
 });
 
-app.post("/move", (req, res) => {
+app.post("/move", async (req, res) => {
   //const { fromSquare, toSquare } = req.body;
 
   let fromSquare = req.body[0];
@@ -716,7 +735,12 @@ app.post("/move", (req, res) => {
 
   // initialize game to current state
   // use game_id here in loadGame function
-  console.log(game_id)
+  try {
+    game = await loadGame(game_id);
+  }
+  catch (error) {
+    console.error("Load Game error: ", error);
+  }
 
   const gameResult = checkGameResult(game);
 
