@@ -31,7 +31,14 @@ function updateGame(id, newMoveList) {
   return promise;
 }
 
+// finds the game in the database by id
+// and returns it as a promise
+function findGameById(id) {
+  return gameModel.findById(id);
+}
+
 export default {
   createGame,
-  updateGame
+  updateGame,
+  findGameById
 };
