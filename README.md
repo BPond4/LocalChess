@@ -39,3 +39,8 @@ npm install
 When submitting a pull request, ensure that your code adheres to our coding standards. Run ESLint and Prettier on your code before submitting. Make sure there are no linting errors or formatting issues.
 
 Thank you for helping to maintain code quality and consistency in our project!
+
+### Figma UI Prototype
+
+https://www.figma.com/file/8yrBVkn6hlnp6v1FXTZPcE/LocalChess-team-library?type=design&node-id=2311-4&mode=design
+
