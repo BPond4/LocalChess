@@ -44,3 +44,7 @@ Thank you for helping to maintain code quality and consistency in our project!
 
 https://www.figma.com/file/8yrBVkn6hlnp6v1FXTZPcE/LocalChess-team-library?type=design&node-id=2311-4&mode=design
 
+### UML 
+
+https://github.com/BPond4/LocalChess/blob/main/docs/uml.md
+
