@@ -281,12 +281,7 @@ This function is crucial for implementing movement rules for pieces like the roo
 as they can move horizontally along columns.
 */
 
-function isBlockedHorizontal(
-  fromRow,
-  fromCol,
-  toCol,
-  board
-) {
+function isBlockedHorizontal(fromRow, fromCol, toCol, board) {
   if (fromCol < toCol) {
     for (let i = fromCol + ONE_COL_AFTER; i < toCol; i++) {
       if (board[fromRow][i] != null) {
@@ -323,12 +318,7 @@ This function is invaluable for implementing movement rules for chess pieces lik
 as they are capable of moving vertically along rows on the chessboard.
 */
 
-function isBlockedVertical(
-  fromRow,
-  fromCol,
-  toRow,
-  board
-) {
+function isBlockedVertical(fromRow, fromCol, toRow, board) {
   if (fromRow < toRow) {
     for (let i = fromRow + ONE_ROW_AFTER; i < toRow; i++) {
       if (board[i][fromCol] != null) {
@@ -646,7 +636,6 @@ app.post("/start", (req, res) => {
 });
 
 app.post("/move", async (req, res) => {
-
   let fromSquare = req.body[0];
   let toSquare = req.body[1];
   let game_id = req.body[2];
@@ -724,7 +713,7 @@ app.post("/move", async (req, res) => {
       .catch((error) => {
         console.log("updateGame error: " + error);
       });
-    
+
     res.json({ message: "Valid move" });
   } else {
     res.json({ message: "Invalid move" });
