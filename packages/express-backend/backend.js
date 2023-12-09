@@ -184,30 +184,15 @@ function isValidMove(game, fromSquare, toSquare) {
   let row = fromSquare[0];
   let col = fromSquare[1];
 
-  for (let row2 = ROW_1; row2 < BOARD_HEIGHT; row2++) {
-    for (let col2 = COL_A; col2 < BOARD_WIDTH; col2++) {
-      if (board[row2][col2]) {
-        // console.log(board[row2][col2].color + " " + board[row2][col2].type);
-      } else {
-        //console.log("("+row2+", "+col2+")");
-      }
-    }
-  }
   if (!isValidSquare(fromSquare) || !isValidSquare(toSquare)) {
-    //console.log("isValidSquare");
     return false;
   }
 
-  // let fromPiece = board[fromSquare[0]][fromSquare[1]];
-
   if (!board[row][col]) {
-    //console.log("("+row+", "+col+")");
     return false;
   }
 
   if (board[row][col].color !== currentPlayer) {
-    // console.log("fromPiece.color = " + board[row][col].color);
-    // console.log("currentPlayer = " + currentPlayer);
     return false;
   }
 
@@ -219,7 +204,6 @@ function isValidMove(game, fromSquare, toSquare) {
       board[row][col]
     )
   ) {
-    // console.log("isValidPieceMove");
     return false;
   }
 
@@ -300,7 +284,6 @@ as they can move horizontally along columns.
 function isBlockedHorizontal(
   fromRow,
   fromCol,
-  toRow,
   toCol,
   board
 ) {
@@ -344,7 +327,6 @@ function isBlockedVertical(
   fromRow,
   fromCol,
   toRow,
-  toCol,
   board
 ) {
   if (fromRow < toRow) {
@@ -477,8 +459,6 @@ function isValidPieceMove(game, fromSquare, toSquare, piece) {
       }
 
       return false;
-
-      //break;
     }
     case KNIGHT: {
       let knightRowDiff = Math.abs(fromRow - toRow);
@@ -493,7 +473,6 @@ function isValidPieceMove(game, fromSquare, toSquare, piece) {
         return true;
       }
       return false;
-      //break;
     }
     case BISHOP: {
       let bishopRowDiff = Math.abs(fromRow - toRow);
@@ -514,8 +493,6 @@ function isValidPieceMove(game, fromSquare, toSquare, piece) {
       }
 
       return false;
-
-      //break;
     }
     case QUEEN: {
       if (fromRow === toRow) {
@@ -556,8 +533,6 @@ function isValidPieceMove(game, fromSquare, toSquare, piece) {
       }
 
       return false;
-
-      //break;
     }
     case KING: {
       let kingRowDiff = Math.abs(fromRow - toRow);
@@ -568,8 +543,6 @@ function isValidPieceMove(game, fromSquare, toSquare, piece) {
       }
 
       return false;
-
-      //break;
     }
     default:
       return false;
@@ -617,7 +590,6 @@ function updateGameState(game, fromSquare, toSquare) {
   board[fromRow][fromCol] = null;
 
   game.currentPlayer = currentPlayer === WHITE ? BLACK : WHITE;
-  //console.log("Current player");
 
   game.lastMoveHistory.push({
     from: fromSquare,
@@ -674,7 +646,6 @@ app.post("/start", (req, res) => {
 });
 
 app.post("/move", async (req, res) => {
-  //const { fromSquare, toSquare } = req.body;
 
   let fromSquare = req.body[0];
   let toSquare = req.body[1];
@@ -733,8 +704,6 @@ app.post("/move", async (req, res) => {
     fromSquare[1] = COL_H;
   }
 
-  // initialize game to current state
-  // use game_id here in loadGame function
   try {
     game = await loadGame(game_id);
   } catch (error) {
@@ -755,10 +724,9 @@ app.post("/move", async (req, res) => {
       .catch((error) => {
         console.log("updateGame error: " + error);
       });
-    // res.json({ game: game, result: gameResult });
+    
     res.json({ message: "Valid move" });
   } else {
-    //res.status(BAD_REQUEST).json({ error: 'Invalid move' });
     res.json({ message: "Invalid move" });
   }
 });
